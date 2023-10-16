@@ -1,0 +1,7 @@
+# Ignore commonly generated/ignored files
+.DS_Store
+node_modules/
+
+# Ignore webpack generated files
+assets/*
+!assets/.keep
