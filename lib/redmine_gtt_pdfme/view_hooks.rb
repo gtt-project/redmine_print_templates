@@ -9,5 +9,9 @@ module RedmineGttPdfme
       end
     end
 
+    render_on :view_layouts_base_html_head, inline: <<-END
+      <%= stylesheet_link_tag 'gtt_pdfme', plugin: 'redmine_gtt_pdfme' %>
+    END
+
   end
 end
