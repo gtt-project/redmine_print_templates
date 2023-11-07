@@ -1,4 +1,4 @@
-import { Template, BLANK_PDF } from '@pdfme/generator';
+import { Template, BLANK_PDF } from '@pdfme/common';
 import { Designer } from '@pdfme/ui';
 
 const blankTemplate: Template = {
@@ -37,12 +37,12 @@ if (designerContainer) {
 
   // Workaround until https://github.com/pdfme/pdfme/pull/280 is available.
   // Find the closest parent form of the designerContainer
-  const form = designerContainer.closest('form');
+  // const form = designerContainer.closest('form');
 
-  if (form) {
-    // Prevent form submission
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-    });
-  }
+  // if (form) {
+  //   // Prevent form submission
+  //   form.addEventListener('submit', function(event) {
+  //     event.preventDefault();
+  //   });
+  // }
 }

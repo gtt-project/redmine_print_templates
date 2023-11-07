@@ -5,3 +5,4 @@ node_modules/
 # Ignore webpack generated files
 assets/*
 !assets/.keep
+!assets/stylesheets/gtt_pdfme.css

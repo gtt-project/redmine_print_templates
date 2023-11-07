@@ -22,9 +22,9 @@
   },
   "homepage": "https://github.com/gtt-project/redmine_gtt_pdfme#readme",
   "dependencies": {
-    "@pdfme/common": "^2.2.1",
-    "@pdfme/generator": "^2.2.1",
-    "@pdfme/ui": "^2.2.1",
+    "@pdfme/common": "^3.0.1-dev.6",
+    "@pdfme/generator": "^3.0.1-dev.6",
+    "@pdfme/ui": "^3.0.1-dev.6",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
