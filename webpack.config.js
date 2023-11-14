@@ -1,4 +1,8 @@
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Construct __dirname equivalent in ES module
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Loaders for processing TypeScript files
 const tsLoaders = {
@@ -7,7 +11,7 @@ const tsLoaders = {
   exclude: /node_modules/
 };
 
-module.exports = {
+export default {
   mode: 'production',
   entry: path.join(__dirname, 'src', 'index.ts'),
   module: {
@@ -16,9 +20,10 @@ module.exports = {
     ]
   },
   devtool: false, // Disable source maps
-  // devtool: 'source-map', // Generate source maps for easier debugging
+  // Uncomment the next line to enable source maps for easier debugging
+  // devtool: 'source-map',
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ]
+    extensions: ['.tsx', '.ts', '.js']
   },
   output: {
     filename: 'bundle.js',

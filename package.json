@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Plugin that enables printing templates with pdfme in Redmine",
   "main": "index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gtt-project/redmine_gtt_pdfme.git"

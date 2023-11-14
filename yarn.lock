@@ -220,9 +220,9 @@
     pako "^1.0.10"
 
 "@pdfme/common@^3.0.1-dev.6":
-  version "3.0.1-dev.6"
-  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-3.0.1-dev.6.tgz#0ba3e794d630b5289836216b4e36e748cae9088d"
-  integrity sha512-KRcmSHcggt+a8giwaamAN32r/hkLg43MudKHuo7Flj8uFv2rLitvo44S4n4sLkn3bhBftASF9ivDf9bBN3nD7A==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-3.0.1.tgz#62e59306c842b0e82d2b7624945dff584ed9eff9"
+  integrity sha512-XWdXgm9kul78Tz9dxpUVz3SCidqGnXqrxbw7AUQIfm4SaagDWFkixcJmpcEtNLytO5JGwpn7QZE8A+pS5Iljpw==
   dependencies:
     "@pdfme/pdf-lib" "^1.17.3"
     buffer "^6.0.3"
@@ -230,9 +230,9 @@
     zod "^3.20.2"
 
 "@pdfme/generator@^3.0.1-dev.6":
-  version "3.0.1-dev.6"
-  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-3.0.1-dev.6.tgz#4e19c679ddc8f9f55a0e8587acaaaabffafe42cb"
-  integrity sha512-aoh88hcZ/wAiQ0HkMEJADfuE+r5pq5/rdVawraaMHLca71n+a+SXVEUPIk7fZAhBZF45Gzlj1blRibhjtf13Og==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-3.0.1.tgz#8c8abb98b8b5858d27031e2f00856ffd8ed1792e"
+  integrity sha512-lKJHXRI6ivh/ffDUCRag9WPZ9MXQd0uxBwm1SgL5x/5O3MDBdstUbRUDHzbdm+2O51nMlPnGkLvAgGEsCR7BKg==
   dependencies:
     "@pdfme/pdf-lib" "^1.17.3"
     atob "^2.1.2"
@@ -249,9 +249,9 @@
     tslib "^1.11.1"
 
 "@pdfme/ui@^3.0.1-dev.6":
-  version "3.0.1-dev.6"
-  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-3.0.1-dev.6.tgz#75d74a2628eaff80cff38f6d25d94ffaef755441"
-  integrity sha512-uA45u+xKgcCIEwPFfaz0W3Xhn+sVhqDuLGofUp68QuugfCbobnwGNQlXcox+C1E/PHsfmkKeBDDSWyHOGZVQZw==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-3.0.1.tgz#30595397d75f0bcc01e852b7338aa78ef248bfaa"
+  integrity sha512-icg5wMeTLPMi8T222PpP0OV0H9araXRPP33Tj6LOeHHtGhHoiaW2sOwzjkvwpBlL3ncHV5VT+EAk/URsN0aSew==
   dependencies:
     "@dnd-kit/core" "^6.0.8"
     "@dnd-kit/sortable" "^7.0.2"
