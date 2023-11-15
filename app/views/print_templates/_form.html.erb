@@ -1,5 +1,5 @@
 <div class="box tabular">
-  <p><%= f.text_field :name, required: true, size: 35 %></p>
+  <p><%= f.text_field :name, required: true, size: 50 %></p>
   <p>
     <%= f.select :tracker_id,
                  options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
@@ -7,14 +7,20 @@
   </p>
 
   <p>
-    <%= label_tag nil, l(:label_print_template_designer), class: '' %>
+    <%= content_tag(:label, l(:label_print_template_basepdf)) %>
+    <input type="file" onchange="encodeBasePDF(this)" accept="application/pdf" id="pdf-upload" />
+    <span id="basepdf-ok-icon" class="icon-only icon-ok" style="<%= 'display: none;' unless @print_template.basepdf.present? %>"></span>
+    <%= link_to l(:link_print_template_basepdf_reset), '#', id: 'use-blank-pdf', style: ('display: none;' unless @print_template.basepdf.present?) %>
+  </p>
+
+  <p>
     <%= button_tag l(:button_print_template_designer_open), type: 'button', id: 'open-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
   </p>
 
   <!-- Hidden Fields -->
   <%= f.hidden_field :schemas, value: @print_template.schemas %>
   <%= f.hidden_field :inputs, value: @print_template.inputs %>
-  <%= f.hidden_field :basepdf, value: @print_template.basepdf %>
+  <%= f.hidden_field :basepdf, value: @print_template.basepdf, id: 'print_template_basepdf' %>
 </div>
 
 <div id="designer-fullscreen" style="display:none;">
@@ -38,5 +44,50 @@ document.addEventListener("DOMContentLoaded", function() {
   closeBtn.addEventListener('click', function() {
     designerFullscreen.style.display = 'none';
   });
+
+  var uploadField = document.getElementById('pdf-upload');
+  var useBlankPdfLink = document.getElementById('use-blank-pdf');
+
+  // Check on page load
+  toggleBasePDFControls();
+
+  // Handle "Use blank PDF" link
+  useBlankPdfLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('print_template_basepdf').value = '';
+    uploadField.value = ''; // Reset the file upload field
+    toggleBasePDFControls();
+  });
 });
+
+function encodeBasePDF(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      var encodedPDF = e.target.result;
+      document.getElementById('print_template_basepdf').value = encodedPDF;
+
+      // Update the visibility of the icon and the "Use blank PDF" link
+      toggleBasePDFControls();
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Function to toggle the visibility of the icon and the "Use blank PDF" link
+function toggleBasePDFControls() {
+  var basepdfField = document.getElementById('print_template_basepdf');
+  var basepdfIcon = document.getElementById('basepdf-ok-icon');
+  var useBlankPdfLink = document.getElementById('use-blank-pdf');
+
+  if (basepdfField && basepdfField.value) {
+    basepdfIcon.style.display = 'inline';
+    useBlankPdfLink.style.display = 'inline';
+  } else {
+    basepdfIcon.style.display = 'none';
+    useBlankPdfLink.style.display = 'none';
+  }
+}
 <% end %>

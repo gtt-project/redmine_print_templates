@@ -1,6 +1,10 @@
 <tr>
   <td><%= link_to print_template.name, edit_print_template_path(print_template) %></td>
   <td class="text"><%= textilizable print_template.tracker.name %></td>
-  <td><%= link_to 'Delete', print_template_path(print_template), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  <td>
+    <% if print_template.basepdf.present? %>
+      <span class="icon-only icon-ok"></span>
+    <% end %>
+  </td>
+  <td><%= delete_link(print_template_path(print_template)) %></td>
 </tr>
-
