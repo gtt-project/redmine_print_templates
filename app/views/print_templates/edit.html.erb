@@ -1,0 +1,8 @@
+<%= title [l(:label_print_templates_plural), print_templates_path], @print_template.name %>
+
+<%= labelled_form_for @print_template, url: print_template_path(@print_template), method: :patch do |f| %>
+  <%= render partial: 'form', locals: { f: f } %>
+  <p>
+    <%= submit_tag l :button_save %>
+  </p>
+<% end %>

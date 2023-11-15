@@ -1,4 +1,5 @@
 ja:
   label_print_templates_plural: "Print templates"
   label_print_templates_new: "New print template"
+  label_print_template_name: "Print template name"
   general_print_templates_settings: "General Settings"

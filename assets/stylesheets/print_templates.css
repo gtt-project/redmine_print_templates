@@ -5,6 +5,14 @@
 #admin-menu a.print-templates { background-image: url(../images/layout_content.png);}
 
 /**************************************************************/
+/*                  PrintTemplates table
+/**************************************************************/
+
+table.list.printtemplates tbody td { vertical-align: top; }
+table.list.printtemplates tbody td.text { text-align: left; }
+table.list.printtemplates tbody td.text div { height: 3.8em; }
+
+/**************************************************************/
 /*                  DESIGNER
 /**************************************************************/
 

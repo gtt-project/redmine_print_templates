@@ -1,0 +1,16 @@
+<% if print_templates.any? %>
+  <table class="list printtemplates">
+    <thead>
+      <tr>
+        <th><%= l :label_print_template_name %></th>
+        <th><%= l :label_tracker %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render collection: print_templates, partial: 'print_templates/print_template' %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="nodata"><%= l :label_no_data %></p>
+<% end %>

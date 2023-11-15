@@ -1,0 +1,15 @@
+<div class="box tabular">
+  <p><%= f.text_field :name, required: true, size: 35 %></p>
+  <p>
+    <%= f.select :tracker_id,
+                 options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id),
+                 { include_blank: "Select a Tracker", required: true } %>
+  </p>
+
+  <div id="pdfme-designer"></div>
+
+  <!-- Hidden Fields -->
+  <%= f.hidden_field :schemas, value: @print_template.schemas %>
+  <%= f.hidden_field :inputs, value: @print_template.inputs %>
+  <%= f.hidden_field :basepdf, value: @print_template.basepdf %>
+</div>

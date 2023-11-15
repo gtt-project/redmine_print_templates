@@ -1,0 +1,6 @@
+<tr>
+  <td><%= link_to print_template.name, edit_print_template_path(print_template) %></td>
+  <td class="text"><%= textilizable print_template.tracker.name %></td>
+  <td><%= link_to 'Delete', print_template_path(print_template), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
+
