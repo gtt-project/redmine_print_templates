@@ -1,4 +1,4 @@
 en:
-  label_gtt_pdfme_plural: "Print templates"
-  label_gtt_pdfme_new: "New print template"
-  general_gtt_pdfme_settings: "General Settings"
+  label_print_templates_plural: "Print templates"
+  label_print_templates_new: "New print template"
+  general_print_templates_settings: "General Settings"

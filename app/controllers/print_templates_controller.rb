@@ -1,4 +1,4 @@
-class GttPdfmeController < ApplicationController
+class PrintTemplatesController < ApplicationController
 
   layout ->{ @project ? 'base' : 'admin' }
 

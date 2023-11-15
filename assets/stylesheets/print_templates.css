@@ -2,16 +2,14 @@
 /*                  ICONS
 /**************************************************************/
 
-#admin-menu a.gtt-pdfme { background-image: url(../images/layout_content.png);}
+#admin-menu a.print-templates { background-image: url(../images/layout_content.png);}
 
 /**************************************************************/
 /*                  DESIGNER
 /**************************************************************/
 
 #pdfme-designer {
-  /* width: 100%; */
-  height: 95%;
-  margin-top: 1.5rem;
+  height: 90%;
 }
 
 #pdfme-designer button {

@@ -1,6 +1,6 @@
-# Redmine GTT pdfme Plugin
+# Redmine Print Templates Plugin
 
-The Redmine GTT pdfme plugin enables printing templates with [pdfme](https://www.pdfme.com/)
+The Redmine Print Templates plugin enables printing templates with [pdfme](https://www.pdfme.com/)
 in Redmine installations.
 
 ## Requirements
@@ -11,13 +11,13 @@ in Redmine installations.
 
 ## Installation
 
-To install Redmine GTT pdfme plugin, download or clone this repository in your
+To install Redmine Print Templates plugin, download or clone this repository in your
 Redmine installation plugins directory!
 
 ```sh
 cd path/to/plugin/directory
-git clone https://github.com/gtt-project/redmine_gtt_pdfme.git
-cd redmine_gtt_pdfme
+git clone https://github.com/gtt-project/redmine_print_templates.git
+cd redmine_print_templates
 yarn
 npx webpack
 ```
@@ -29,7 +29,7 @@ bundle install
 bundle exec rake redmine:plugins:migrate
 ```
 
-After restarting Redmine, you should be able to see the Redmine Chatwoot plugin
+After restarting Redmine, you should be able to see the Redmine Print Templates plugin
 in the Plugins page.
 
 More information on installing (and uninstalling) Redmine plugins can be found
@@ -55,13 +55,13 @@ npx webpack --watch --mode=development --devtool=source-map
 
 ## Version History
 
-See [all releases](https://github.com/gtt-project/redmine_gtt_pdfme/releases)
+See [all releases](https://github.com/gtt-project/redmine_print_templates/releases)
 with release notes.
 
 ## Authors
 
 - [Daniel Kastl](https://github.com/dkastl)
-- ... [and others](https://github.com/gtt-project/redmine_gtt_pdfme/graphs/contributors)
+- ... [and others](https://github.com/gtt-project/redmine_print_templates/graphs/contributors)
 
 ## LICENSE
 

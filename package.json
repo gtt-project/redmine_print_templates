@@ -1,12 +1,12 @@
 {
-  "name": "redmine_gtt_pdfme",
-  "version": "0.1.0",
+  "name": "redmine_print_templates",
+  "version": "0.2.0",
   "description": "Plugin that enables printing templates with pdfme in Redmine",
   "main": "index.js",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gtt-project/redmine_gtt_pdfme.git"
+    "url": "git+https://github.com/gtt-project/redmine_print_templates.git"
   },
   "keywords": [
     "redmine",
@@ -15,13 +15,13 @@
   "author": "Georepublic",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/gtt-project/redmine_gtt_pdfme/issues"
+    "url": "https://github.com/gtt-project/redmine_print_templates/issues"
   },
   "scripts": {
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/gtt-project/redmine_gtt_pdfme#readme",
+  "homepage": "https://github.com/gtt-project/redmine_print_templates#readme",
   "dependencies": {
     "@pdfme/common": "^3.0.1-dev.6",
     "@pdfme/generator": "^3.0.1-dev.6",
