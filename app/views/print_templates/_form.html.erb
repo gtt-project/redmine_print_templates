@@ -2,14 +2,41 @@
   <p><%= f.text_field :name, required: true, size: 35 %></p>
   <p>
     <%= f.select :tracker_id,
-                 options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id),
-                 { include_blank: "Select a Tracker", required: true } %>
+                 options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
+                 { required: true } %>
   </p>
 
-  <div id="pdfme-designer"></div>
+  <p>
+    <%= label_tag nil, l(:label_print_template_designer), class: '' %>
+    <%= button_tag l(:button_print_template_designer_open), type: 'button', id: 'open-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+  </p>
 
   <!-- Hidden Fields -->
   <%= f.hidden_field :schemas, value: @print_template.schemas %>
   <%= f.hidden_field :inputs, value: @print_template.inputs %>
   <%= f.hidden_field :basepdf, value: @print_template.basepdf %>
 </div>
+
+<div id="designer-fullscreen" style="display:none;">
+  <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+
+  <div id="pdfme-designer"></div>
+</div>
+
+<%= javascript_tag do %>
+document.addEventListener("DOMContentLoaded", function() {
+  $("#close-designer-fullscreen-btn").button();
+
+  var openBtn = document.getElementById('open-designer-fullscreen-btn');
+  var closeBtn = document.getElementById('close-designer-fullscreen-btn');
+  var designerFullscreen = document.getElementById('designer-fullscreen');
+
+  openBtn.addEventListener('click', function() {
+    designerFullscreen.style.display = 'block';
+  });
+
+  closeBtn.addEventListener('click', function() {
+    designerFullscreen.style.display = 'none';
+  });
+});
+<% end %>

@@ -46,7 +46,7 @@ class PrintTemplatesController < ApplicationController
   private
 
   def set_trackers
-    @trackers = Tracker.all
+    @trackers = Tracker.order(:position)
   end
 
   def find_print_template
