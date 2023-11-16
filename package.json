@@ -25,6 +25,7 @@
   "dependencies": {
     "@pdfme/common": "3.0.1-dev.18",
     "@pdfme/generator": "3.0.1-dev.18",
+    "@pdfme/schemas": "3.0.1-dev.18",
     "@pdfme/ui": "3.0.1-dev.18",
     "ts-loader": "^9.5.1",
     "typescript": "^5.2.2",

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const designerContainer = document.getElementById('pdfme-designer');
   const basepdfField = document.getElementById('print_template_basepdf') as HTMLInputElement | null;
   const schemasField = document.getElementById('print_template_schemas') as HTMLInputElement | null;
+  const inputsField = document.getElementById('print_template_inputs') as HTMLInputElement | null;
   const openBtn = document.getElementById('open-designer-fullscreen-btn');
   const closeBtn = document.getElementById('close-designer-fullscreen-btn');
   const designerFullscreen = document.getElementById('designer-fullscreen');
@@ -14,13 +15,15 @@ document.addEventListener("DOMContentLoaded", function() {
   if (designerContainer && openBtn && closeBtn && designerFullscreen && basepdfField && schemasField) {
     let designer: Designer | undefined;
     let currentSchemas = schemasField.value ? JSON.parse(schemasField.value) : [];
+    let currentInputs = inputsField.value ? JSON.parse(inputsField.value) : [{}];
 
     openBtn?.addEventListener('click', function() {
       const basePdfValue = basepdfField.value ? basepdfField.value : BLANK_PDF;
 
       const template: Template = {
         basePdf: basePdfValue,
-        schemas: currentSchemas
+        schemas: currentSchemas,
+        sampledata: currentInputs,
       };
 
       if (!designer && designerContainer) {
@@ -31,6 +34,9 @@ document.addEventListener("DOMContentLoaded", function() {
         designer.onChangeTemplate((updatedTemplate) => {
           currentSchemas = updatedTemplate.schemas;
           schemasField.value = JSON.stringify(currentSchemas);
+
+          currentInputs = updatedTemplate.sampledata || [{}];
+          inputsField.value = JSON.stringify(currentInputs);
         });
       } else {
         designer?.updateTemplate(template);
