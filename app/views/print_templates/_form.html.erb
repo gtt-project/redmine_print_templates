@@ -18,9 +18,9 @@
   </p>
 
   <!-- Hidden Fields -->
-  <%= f.hidden_field :schemas, value: @print_template.schemas %>
-  <%= f.hidden_field :inputs, value: @print_template.inputs %>
+  <%= f.hidden_field :schemas, value: @print_template.schemas, id: 'print_template_schemas' %>
   <%= f.hidden_field :basepdf, value: @print_template.basepdf, id: 'print_template_basepdf' %>
+  <%= f.hidden_field :inputs, value: @print_template.inputs, id: 'print_template_inputs' %>
 </div>
 
 <div id="designer-fullscreen" style="display:none;">
@@ -28,66 +28,3 @@
 
   <div id="pdfme-designer"></div>
 </div>
-
-<%= javascript_tag do %>
-document.addEventListener("DOMContentLoaded", function() {
-  $("#close-designer-fullscreen-btn").button();
-
-  var openBtn = document.getElementById('open-designer-fullscreen-btn');
-  var closeBtn = document.getElementById('close-designer-fullscreen-btn');
-  var designerFullscreen = document.getElementById('designer-fullscreen');
-
-  openBtn.addEventListener('click', function() {
-    designerFullscreen.style.display = 'block';
-  });
-
-  closeBtn.addEventListener('click', function() {
-    designerFullscreen.style.display = 'none';
-  });
-
-  var uploadField = document.getElementById('pdf-upload');
-  var useBlankPdfLink = document.getElementById('use-blank-pdf');
-
-  // Check on page load
-  toggleBasePDFControls();
-
-  // Handle "Use blank PDF" link
-  useBlankPdfLink.addEventListener('click', function(event) {
-    event.preventDefault();
-    document.getElementById('print_template_basepdf').value = '';
-    uploadField.value = ''; // Reset the file upload field
-    toggleBasePDFControls();
-  });
-});
-
-function encodeBasePDF(input) {
-  if (input.files && input.files[0]) {
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-      var encodedPDF = e.target.result;
-      document.getElementById('print_template_basepdf').value = encodedPDF;
-
-      // Update the visibility of the icon and the "Use blank PDF" link
-      toggleBasePDFControls();
-    };
-
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-
-// Function to toggle the visibility of the icon and the "Use blank PDF" link
-function toggleBasePDFControls() {
-  var basepdfField = document.getElementById('print_template_basepdf');
-  var basepdfIcon = document.getElementById('basepdf-ok-icon');
-  var useBlankPdfLink = document.getElementById('use-blank-pdf');
-
-  if (basepdfField && basepdfField.value) {
-    basepdfIcon.style.display = 'inline';
-    useBlankPdfLink.style.display = 'inline';
-  } else {
-    basepdfIcon.style.display = 'none';
-    useBlankPdfLink.style.display = 'none';
-  }
-}
-<% end %>
