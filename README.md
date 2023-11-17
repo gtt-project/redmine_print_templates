@@ -3,6 +3,8 @@
 The Redmine Print Templates plugin enables printing templates with [pdfme](https://www.pdfme.com/)
 in Redmine installations.
 
+> :warning: **Work in Progress**: This project is currently under development and not yet fully functional.
+
 ## Requirements
 
 - Redmine >= 5.0.0
