@@ -234,20 +234,20 @@
   dependencies:
     pako "^1.0.10"
 
-"@pdfme/common@3.0.1-dev.18":
-  version "3.0.1-dev.18"
-  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-3.0.1-dev.18.tgz#67c73f21d31695e22de89fa80a859d15672cc447"
-  integrity sha512-ej9GznLoBIsxLnZUlyqlLYDyvIYAFkynLj4i4IPEZk+NnSOXPzxhrtF4gnMYZ808iXEU7Ek9g+DQUXrRRPox0Q==
+"@pdfme/common@3.0.1-dev.22":
+  version "3.0.1-dev.22"
+  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-3.0.1-dev.22.tgz#cfd072f77fae41da67d2ca4436f35a273f2c687a"
+  integrity sha512-zq7ZH+oe4u+aZMJprMEaQ2Okbh9HB/B+TM3P01uqNmvZ4v2SBsz410hHnG+hr/h6H3MPokymttus3Mof7dcsUg==
   dependencies:
     "@pdfme/pdf-lib" "^1.17.3"
     buffer "^6.0.3"
     form-render "^2.2.20"
     zod "^3.20.2"
 
-"@pdfme/generator@3.0.1-dev.18":
-  version "3.0.1-dev.18"
-  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-3.0.1-dev.18.tgz#f35da786b8093c39a9190c807273c0ca6ed2654b"
-  integrity sha512-0B/29JXMuXh3gR76rSRarthGHC5ny7QOqUJnh/olTGv82hX07soN9iIgHpkbCQZsSix4Asve03sPkJ32uoUhdQ==
+"@pdfme/generator@3.0.1-dev.22":
+  version "3.0.1-dev.22"
+  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-3.0.1-dev.22.tgz#b4d52e7c028f6ce4fd63e4feaf2bf3cb90bdac8f"
+  integrity sha512-ZVGI2rJISqKhe+O8t4xZ2GtxOc47xXVcAKfkbBBrubYjrE/EL9WskiWyHZnLg3VgRReTFBaRd8XymK0J88jrEQ==
   dependencies:
     "@pdfme/pdf-lib" "^1.17.3"
     atob "^2.1.2"
@@ -263,19 +263,19 @@
     pako "^1.0.11"
     tslib "^1.11.1"
 
-"@pdfme/schemas@3.0.1-dev.18":
-  version "3.0.1-dev.18"
-  resolved "https://registry.yarnpkg.com/@pdfme/schemas/-/schemas-3.0.1-dev.18.tgz#79d208adb862338968f5680144aeb870694f31e8"
-  integrity sha512-vyHaBY/YwXGm17lWTyEVpRUSaDi+zYGo1NAk8oD3a3fcrF35Zzb5tp5bdaJ0j6Hv/Re0+zYLhDb+EYlF3aTx/g==
+"@pdfme/schemas@3.0.1-dev.22":
+  version "3.0.1-dev.22"
+  resolved "https://registry.yarnpkg.com/@pdfme/schemas/-/schemas-3.0.1-dev.22.tgz#e5e35a09618f6717a323fe2eea555a6d6ae03d05"
+  integrity sha512-trGez6h+qTUnYaUqPyEYerfuaszavfOPDZex1Qa6bG6/qcypSAKfzwxy0rAJpy/yMSLjGkHxIzJWnFKWV/THbQ==
   dependencies:
     "@pdfme/pdf-lib" "^1.17.3"
     bwip-js "^4.1.1"
     fontkit "^2.0.2"
 
-"@pdfme/ui@3.0.1-dev.18":
-  version "3.0.1-dev.18"
-  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-3.0.1-dev.18.tgz#f1e4221fe92a6dede27b4d755b7f2ce69aa3e6a6"
-  integrity sha512-Z7XG3GNrcXH6wUqdHZ90Fe7eJcKOOKRsrDbuWUySosUHvMLKMfqcvGWFRusO0POwguVtIBQsh3T7b4SyWoipng==
+"@pdfme/ui@3.0.1-dev.22":
+  version "3.0.1-dev.22"
+  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-3.0.1-dev.22.tgz#f9c7d02e5c80c3d3f44247eedf5af353572aac70"
+  integrity sha512-XGqcXV75qCVdRyNyeeO2DBvcef3HGqbY3rVwOgDT6kanX2KMrH5QwA+6uVHGyqawHfQDgfZi2wAVcb6KzlvOAA==
   dependencies:
     "@dnd-kit/core" "^6.0.8"
     "@dnd-kit/sortable" "^7.0.2"

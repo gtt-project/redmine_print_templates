@@ -4,7 +4,7 @@ module RedminePrintTemplates
     def view_layouts_base_body_bottom(context={})
       if User.current.allowed_to?(:view_print_templates, nil, :global => true)
         tags = [];
-        tags << javascript_include_tag('../bundle.js', :plugin => 'redmine_print_templates')
+        tags << javascript_include_tag('print_templates.js', :plugin => 'redmine_print_templates')
         return tags.join("\n")
       end
     end

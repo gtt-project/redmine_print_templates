@@ -23,8 +23,11 @@
   <%= f.hidden_field :inputs, value: @print_template.inputs, id: 'print_template_inputs' %>
 </div>
 
-<div id="designer-fullscreen" style="display:none;">
-  <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+<div id="designer-fullscreen" class="pdfme-overlay" style="display:none;">
+  <div id="designer-button-bar">
+    <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+    <!-- Other buttons or controls can be added here -->
+  </div>
 
-  <div id="pdfme-designer"></div>
+  <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>"></iframe>
 </div>

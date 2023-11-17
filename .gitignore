@@ -3,7 +3,5 @@
 node_modules/
 
 # Ignore webpack generated files
-assets/*
-!assets/.keep
-!assets/images/layout_content.png
-!assets/stylesheets/print_templates.css
+assets/javascripts/pdfme.*
+assets/javascripts/node_modules_*
