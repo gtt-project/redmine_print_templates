@@ -39,11 +39,11 @@ table.list.printtemplates tbody td.text div { height: 3.8em; }
 
 #designer-button-bar button {
   height: unset;
-  margin-right: 20px;
+  margin-right: 2px;
 }
 
 #designer-button-bar select {
-  margin-right: 5px;
+  margin-right: 2px;
 }
 
 #designer-button-bar option {

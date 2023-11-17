@@ -15,7 +15,10 @@
   </p>
 
   <p>
-    <%= button_tag l(:button_print_template_designer_open), type: 'button', id: 'open-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+    <%= button_tag type: 'button', id: 'open-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+      <span class="ui-icon ui-icon-newwin"></span>
+      <%= l(:button_print_template_designer_open) %>
+    <% end %>
   </p>
 
   <!-- Hidden Fields -->
@@ -25,15 +28,33 @@
 </div>
 
 <div id="designer-fullscreen" class="pdfme-overlay" style="display:none;">
-  <div id="designer-button-bar" style="display: flex; align-items: center;">
-    <!-- Dropdown for issue fields -->
-    <%= select_tag :field, options_for_select([]), id: 'tracker-fields', include_blank: true, class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+  <div id="designer-button-bar" style="display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <!-- Dropdown for issue fields -->
+      <%= select_tag :field, options_for_select([]), id: 'tracker-fields', include_blank: true, class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
 
-    <!-- Button to create a new field -->
-    <%= button_tag l(:button_print_template_add_field), type: 'button', id: 'add-field-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+      <!-- Button to create a new field -->
+      <%= button_tag type: 'button', id: 'add-field-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+        <span class="ui-icon ui-icon-plus"></span>
+        <%= l(:button_print_template_add_field) %>
+      <% end %>
+    </div>
 
-    <!-- Close button on the right -->
-    <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only', style: 'margin-left: auto;' %>
+    <div style="margin-right:15px;">
+      <!-- Buttons aligned to the right -->
+      <%= button_tag type: 'button', id: 'template_upload-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+        <span class="ui-icon ui-icon-arrowthick-1-n"></span>
+        <%= l(:button_print_template_designer_template_upload) %>
+      <% end %>
+      <%= button_tag type: 'button', id: 'template_download-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+        <span class="ui-icon ui-icon-arrowthick-1-s"></span>
+        <%= l(:button_print_template_designer_template_download) %>
+      <% end %>
+      <%= button_tag type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+        <span class="ui-icon ui-icon-closethick"></span>
+        <%= l(:button_print_template_designer_close) %>
+      <% end %>
+    </div>
   </div>
   <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>"></iframe>
 </div>
