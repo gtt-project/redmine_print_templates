@@ -1,0 +1,10 @@
+var fieldsSelect = document.getElementById('tracker-fields');
+fieldsSelect.innerHTML = '';
+
+<% @fields.each do |field| %>
+  var option = document.createElement('option');
+  option.value = '<%= field[:identifier] %>';
+  option.text = '<%= field[:name] %>';
+  option.setAttribute('data-format', '<%= field[:format] %>');
+  fieldsSelect.appendChild(option);
+<% end %>

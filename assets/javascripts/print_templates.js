@@ -2,12 +2,29 @@ document.addEventListener("DOMContentLoaded", function() {
   const basepdfField = document.getElementById('print_template_basepdf');
   const schemasField = document.getElementById('print_template_schemas');
   const inputsField = document.getElementById('print_template_inputs');
+  const trackerIdSelect = document.getElementById('print_template_tracker_id');
   const openBtn = document.getElementById('open-designer-fullscreen-btn');
   const closeBtn = document.getElementById('close-designer-fullscreen-btn');
   const designerOverlay = document.getElementById('designer-fullscreen');
   const iframe = document.getElementById('pdfme-designer-iframe');
   const uploadField = document.getElementById('pdf-upload');
   const useBlankPdfLink = document.getElementById('use-blank-pdf');
+  const fieldsDropdown = document.getElementById('tracker-fields');
+
+  function loadTrackerData() {
+    Rails.ajax({
+      url: trackerIdSelect.getAttribute('data-url') + "?tracker_id=" + trackerIdSelect.value,
+      type: 'GET',
+      dataType: 'script'
+    });
+  }
+
+  trackerIdSelect.addEventListener('change', function() {
+    loadTrackerData();
+  });
+
+  // Trigger the loadTrackerData request on page load
+  loadTrackerData();
 
   // Function to encode a PDF file in base64
   function encodeBasePDF(input) {

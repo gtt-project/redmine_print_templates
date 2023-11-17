@@ -43,6 +43,55 @@ class PrintTemplatesController < ApplicationController
     end
   end
 
+  def fields_for_tracker
+    @tracker = Tracker.find(params[:tracker_id])
+
+    # Define core fields and their formats (if known)
+    core_fields = {
+      'status_id' => 'text',
+      'priority_id' => 'text',
+      'assigned_to_id' => 'text',
+      'category_id' => 'text',
+      'fixed_version_id' => 'text',
+      'subject' => 'text',
+      'description' => 'text',
+      'start_date' => 'date',
+      'due_date' => 'date'
+    }
+
+    @fields = core_fields.map do |field, format|
+      field_key = field.end_with?('_id') ? field[0...-3] : field
+      {
+        name: I18n.t("field_#{field_key}"),
+        identifier: field,
+        format: format
+      }
+    end
+
+    # Add custom fields with their specific format
+    # TODO: match Redmine format terms with PDFme format terms
+    @tracker.custom_fields.each do |cf|
+      @fields << {
+        name: cf.name,
+        identifier: "issue_custom_field_values_#{cf.id}",
+        format: cf.field_format
+      }
+    end
+
+    # Add the special 'geom' field
+    @fields << {
+      name: I18n.t("field_map"),
+      identifier: 'geom',
+      format: 'image'
+    }
+
+    @fields.sort_by! { |field| field[:name].downcase }
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def set_trackers

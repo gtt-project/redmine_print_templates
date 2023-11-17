@@ -2,8 +2,9 @@
   <p><%= f.text_field :name, required: true, size: 50 %></p>
   <p>
     <%= f.select :tracker_id,
-                 options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
-                 { required: true } %>
+                options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
+                { required: true },
+                { data: { url: url_for(controller: 'print_templates', action: 'fields_for_tracker', format: :js) } } %>
   </p>
 
   <p>
@@ -24,10 +25,15 @@
 </div>
 
 <div id="designer-fullscreen" class="pdfme-overlay" style="display:none;">
-  <div id="designer-button-bar">
-    <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
-    <!-- Other buttons or controls can be added here -->
-  </div>
+  <div id="designer-button-bar" style="display: flex; align-items: center;">
+    <!-- Dropdown for issue fields -->
+    <%= select_tag :field, options_for_select([]), id: 'tracker-fields', include_blank: true, class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
 
-  <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>"></iframe>
+    <!-- Button to create a new field -->
+    <%= button_tag l(:button_print_template_add_field), type: 'button', id: 'add-field-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+
+    <!-- Close button on the right -->
+    <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only', style: 'margin-left: auto;' %>
+  </div>
+  <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>" style="width: 100%; height: calc(100% - 40px); border: none;"></iframe>
 </div>

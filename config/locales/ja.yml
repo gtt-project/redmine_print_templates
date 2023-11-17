@@ -5,5 +5,7 @@ ja:
   label_print_template_basepdf: "BasePDF"
   general_print_templates_settings: "General Settings"
   button_print_template_designer_open: "Open Designer in Fullscreen"
+  button_print_template_add_field: "Add Field"
   button_print_template_designer_close: "Close Designer"
   link_print_template_basepdf_reset: "Reset to blank BasePDF"
+  field_map: "Map"
