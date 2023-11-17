@@ -52,7 +52,7 @@ table.list.printtemplates tbody td.text div { height: 3.8em; }
 
 #pdfme-designer-iframe {
   width: 100%;
-  height: calc(100% - 40px);
+  height: calc(100% - 55px);
   border: none;
 }
 

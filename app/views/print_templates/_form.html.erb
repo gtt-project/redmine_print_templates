@@ -35,5 +35,5 @@
     <!-- Close button on the right -->
     <%= button_tag l(:button_print_template_designer_close), type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only', style: 'margin-left: auto;' %>
   </div>
-  <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>" style="width: 100%; height: calc(100% - 40px); border: none;"></iframe>
+  <iframe id="pdfme-designer-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'designer') %>"></iframe>
 </div>
