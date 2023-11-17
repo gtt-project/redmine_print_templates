@@ -10,21 +10,38 @@ document.addEventListener("DOMContentLoaded", function() {
   const uploadField = document.getElementById('pdf-upload');
   const useBlankPdfLink = document.getElementById('use-blank-pdf');
   const fieldsDropdown = document.getElementById('tracker-fields');
+  const addFieldBtn = document.getElementById('add-field-btn');
 
+  // Function to update fields dropdown
   function loadTrackerData() {
-    Rails.ajax({
-      url: trackerIdSelect.getAttribute('data-url') + "?tracker_id=" + trackerIdSelect.value,
-      type: 'GET',
-      dataType: 'script'
-    });
+    if (trackerIdSelect) {
+      Rails.ajax({
+        url: trackerIdSelect.getAttribute('data-url') + "?tracker_id=" + trackerIdSelect.value,
+        type: 'GET',
+        dataType: 'script'
+      });
+    }
   }
 
-  trackerIdSelect.addEventListener('change', function() {
-    loadTrackerData();
-  });
+  // Event listener for tracker dropdown change
+  if (trackerIdSelect) {
+    trackerIdSelect.addEventListener('change', function() {
+      loadTrackerData();
+    });
 
-  // Trigger the loadTrackerData request on page load
-  loadTrackerData();
+    // Trigger the loadTrackerData request on page load
+    loadTrackerData();
+  }
+
+  // Function to get the selected field's details
+  function getSelectedFieldDetails() {
+    const selectedOption = fieldsDropdown.options[fieldsDropdown.selectedIndex];
+    return {
+      identifier: selectedOption.value,
+      name: selectedOption.text,
+      format: selectedOption.getAttribute('data-format')
+    };
+  }
 
   // Function to encode a PDF file in base64
   function encodeBasePDF(input) {
@@ -105,6 +122,18 @@ document.addEventListener("DOMContentLoaded", function() {
         schemasField.value = JSON.stringify(schemas);
         inputsField.value = JSON.stringify(inputs);
       }
+    });
+  }
+
+  if (addFieldBtn && fieldsDropdown && iframe) {
+    addFieldBtn.addEventListener('click', function() {
+      const selectedField = getSelectedFieldDetails();
+      const iframeWindow = iframe.contentWindow;
+
+      iframeWindow.postMessage({
+        type: 'addField',
+        data: selectedField
+      }, window.location.origin);
     });
   }
 });
