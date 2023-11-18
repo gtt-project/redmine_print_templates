@@ -15,6 +15,22 @@ document.addEventListener("DOMContentLoaded", function() {
   const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
   const templateFileInput = document.getElementById('template-file-input');
 
+
+  const viewPdfButton = document.getElementById('view-pdf-button');
+  const printTemplateSelect = document.getElementById('print_template_select');
+
+  if (viewPdfButton && printTemplateSelect) {
+    viewPdfButton.addEventListener('click', function() {
+      const selectedTemplateId = printTemplateSelect.value;
+      if (selectedTemplateId) {
+        // TODO: Implement the logic to open the PDF Viewer with the selected template
+        alert('PDF Viewer will open for template ID: ' + selectedTemplateId);
+      } else {
+        alert('Please select a print template.');
+      }
+    });
+  }
+
   // Function to update fields dropdown
   function loadTrackerData() {
     if (trackerIdSelect) {

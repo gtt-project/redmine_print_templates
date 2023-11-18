@@ -1,0 +1,23 @@
+<% if @issue && @issue.tracker %>
+  <h3><%= l(:label_print_templates_plural) %></h3>
+  <% print_templates = PrintTemplate.where(tracker_id: @issue.tracker_id) %>
+  <% if print_templates.any? %>
+    <p>
+      <%= label_tag 'print_template_select', l(:label_select_print_template) %>
+      <%= select_tag 'print_template_select',
+          options_from_collection_for_select(print_templates, :id, :name),
+          id: 'print_template_select' %>
+      <br>
+      <%= button_tag l(:button_print_template_view_pdf),
+          type: 'button',
+          id: 'view-pdf-button',
+          class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+    </p>
+  <% else %>
+    <p><%= l(:label_no_print_template_available) %>
+    <% if User.current.admin? %>
+      <br><%= link_to l(:label_print_template_administration), print_templates_path %>
+    <% end %>
+    </p>
+  <% end %>
+<% end %>

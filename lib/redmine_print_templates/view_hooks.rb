@@ -13,5 +13,7 @@ module RedminePrintTemplates
       <%= stylesheet_link_tag 'print_templates', plugin: 'redmine_print_templates' %>
     END
 
+    render_on :view_issues_sidebar_issues_bottom, partial: 'print_templates/issue_sidebar'
+
   end
 end

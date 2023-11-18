@@ -59,3 +59,9 @@ table.list.printtemplates tbody td.text div { height: 3.8em; }
 #open-designer-fullscreen-btn {
   height: unset;
 }
+
+#print_template_select {
+  width: 100%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
