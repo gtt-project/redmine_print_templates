@@ -43,6 +43,43 @@ document.addEventListener("DOMContentLoaded", function() {
     };
   }
 
+  document.getElementById('template_download-designer-fullscreen-btn').addEventListener('click', function() {
+    const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
+
+    // Retrieve the selected tracker name
+    const trackerSelect = document.getElementById('print_template_tracker_id');
+    const trackerName = trackerSelect.options[trackerSelect.selectedIndex].text;
+
+    // Send a message to the iFrame with the tracker name
+    iframeWindow.postMessage({
+      type: 'triggerDownloadTemplate',
+      trackerName: trackerName
+    }, window.location.origin);
+  });
+
+  document.getElementById('template_upload-designer-fullscreen-btn').addEventListener('click', function() {
+    // Trigger the hidden file input when the button is clicked
+    document.getElementById('template-file-input').click();
+  });
+
+  document.getElementById('template-file-input').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.type === "application/json") {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const templateData = JSON.parse(e.target.result);
+        const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
+        iframeWindow.postMessage({
+          type: 'loadTemplate',
+          templateData: templateData
+        }, window.location.origin);
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Please upload a valid JSON template file.');
+    }
+  });
+
   // Function to encode a PDF file in base64
   function encodeBasePDF(input) {
     if (input.files && input.files[0]) {

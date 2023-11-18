@@ -83,6 +83,35 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  function downloadTemplate(trackerName: string) {
+    if (designer) {
+      const templateData = designer.getTemplate();
+      if (templateData) {
+        // Format the filename with the tracker name
+        const fileName = `template_${trackerName.toLowerCase().replace(/\s+/g, '_')}`;
+        downloadJsonFile(templateData, fileName);
+      }
+    }
+  }
+
+  function downloadJsonFile(data: any, fileName: any) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function loadTemplate(templateData: any) {
+    if (designer) {
+      designer.updateTemplate(templateData);
+    }
+  }
+
   // Listen for messages from the parent page
   window.addEventListener('message', function(event) {
     if (event.origin !== window.location.origin) {
@@ -107,6 +136,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (event.data.type === 'addField') {
       addFieldToDesigner(event.data.data);
+    }
+
+    if (event.data.type === 'triggerDownloadTemplate') {
+      downloadTemplate(event.data.trackerName);
+    }
+
+    if (event.data.type === 'loadTemplate') {
+      loadTemplate(event.data.templateData);
     }
   });
 });
