@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const useBlankPdfLink = document.getElementById('use-blank-pdf');
   const fieldsDropdown = document.getElementById('tracker-fields');
   const addFieldBtn = document.getElementById('add-field-btn');
+  const templateDownloadBtn = document.getElementById('template_download-designer-fullscreen-btn');
+  const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
+  const templateFileInput = document.getElementById('template-file-input');
 
   // Function to update fields dropdown
   function loadTrackerData() {
@@ -43,42 +46,46 @@ document.addEventListener("DOMContentLoaded", function() {
     };
   }
 
-  document.getElementById('template_download-designer-fullscreen-btn').addEventListener('click', function() {
-    const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
+  if (templateDownloadBtn) {
+    templateDownloadBtn.addEventListener('click', function() {
+      const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
 
-    // Retrieve the selected tracker name
-    const trackerSelect = document.getElementById('print_template_tracker_id');
-    const trackerName = trackerSelect.options[trackerSelect.selectedIndex].text;
+      // Retrieve the selected tracker name
+      const trackerSelect = document.getElementById('print_template_tracker_id');
+      const trackerName = trackerSelect.options[trackerSelect.selectedIndex].text;
 
-    // Send a message to the iFrame with the tracker name
-    iframeWindow.postMessage({
-      type: 'triggerDownloadTemplate',
-      trackerName: trackerName
-    }, window.location.origin);
-  });
+      // Send a message to the iFrame with the tracker name
+      iframeWindow.postMessage({
+        type: 'triggerDownloadTemplate',
+        trackerName: trackerName
+      }, window.location.origin);
+    });
+  }
 
-  document.getElementById('template_upload-designer-fullscreen-btn').addEventListener('click', function() {
-    // Trigger the hidden file input when the button is clicked
-    document.getElementById('template-file-input').click();
-  });
+  if (templateUploadBtn && templateFileInput) {
+    templateUploadBtn.addEventListener('click', function() {
+      // Trigger the hidden file input when the button is clicked
+      document.getElementById('template-file-input').click();
+    });
 
-  document.getElementById('template-file-input').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file && file.type === "application/json") {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const templateData = JSON.parse(e.target.result);
-        const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
-        iframeWindow.postMessage({
-          type: 'loadTemplate',
-          templateData: templateData
-        }, window.location.origin);
-      };
-      reader.readAsText(file);
-    } else {
-      alert('Please upload a valid JSON template file.');
-    }
-  });
+    templateFileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file && file.type === "application/json") {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const templateData = JSON.parse(e.target.result);
+          const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
+          iframeWindow.postMessage({
+            type: 'loadTemplate',
+            templateData: templateData
+          }, window.location.origin);
+        };
+        reader.readAsText(file);
+      } else {
+        alert('Please upload a valid JSON template file.');
+      }
+    });
+  }
 
   // Function to encode a PDF file in base64
   function encodeBasePDF(input) {
