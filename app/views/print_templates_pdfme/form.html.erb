@@ -2,7 +2,7 @@
 <html>
 <head>
   <% plugin_name = Redmine::Plugin.find(:redmine_print_templates).name rescue 'Print Templates' %>
-  <title><%= "#{plugin_name} - Designer" %></title>
+  <title><%= "#{plugin_name} - Form" %></title>
   <style type="text/css">
     html, body {
       margin: 0;
@@ -29,7 +29,7 @@
   </style>
 </head>
 <body>
-  <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Designer...</div></div>
-  <%= javascript_include_tag 'pdfme-designer', plugin: :redmine_print_templates %>
+  <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Form...</div></div>
+  <%= javascript_include_tag 'pdfme-form', plugin: :redmine_print_templates %>
 </body>
 </html>

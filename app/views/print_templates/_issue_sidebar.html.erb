@@ -8,11 +8,29 @@
           options_from_collection_for_select(print_templates, :id, :name),
           id: 'print_template_select' %>
       <br>
-      <%= button_tag l(:button_print_template_view_pdf),
-          type: 'button',
-          id: 'view-pdf-button',
-          class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
+      <%= button_tag l(:button_print_template_view_pdf), type: 'button', id: 'open-form-fullscreen-btn', class: '' %>
     </p>
+
+    <div id="form-fullscreen" class="pdfme-overlay" style="display:none;">
+      <div id="form-button-bar" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <!-- Button to download as PDF -->
+          <%= button_tag type: 'button', id: 'download-pdf-button', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+            <span class="ui-icon ui-icon-disk"></span>
+            <%= l(:button_print_template_download_pdf) %>
+          <% end %>
+        </div>
+
+        <div style="margin-right:15px;">
+          <!-- Close button aligned to the right -->
+          <%= button_tag type: 'button', id: 'close-form-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
+            <span class="ui-icon ui-icon-closethick"></span>
+            <%= l(:button_close) %>
+          <% end %>
+        </div>
+      </div>
+      <iframe id="pdfme-form-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'form') %>"></iframe>
+    </div>
   <% else %>
     <p><%= l(:label_no_print_template_available) %>
     <% if User.current.admin? %>

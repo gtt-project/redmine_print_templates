@@ -13,7 +13,10 @@ const tsLoaders = {
 
 export default {
   mode: 'production',
-  entry: path.join(__dirname, 'src', 'index.ts'),
+  entry: {
+    'pdfme-designer': path.join(__dirname, 'src', 'designer.ts'),
+    'pdfme-form': path.join(__dirname, 'src', 'form.ts')
+  },
   module: {
     rules: [
       tsLoaders,
@@ -26,8 +29,7 @@ export default {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: 'pdfme.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'assets/javascripts'),
-    assetModuleFilename: '[name].[ext]',
   }
 };

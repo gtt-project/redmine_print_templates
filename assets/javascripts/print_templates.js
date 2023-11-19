@@ -15,19 +15,34 @@ document.addEventListener("DOMContentLoaded", function() {
   const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
   const templateFileInput = document.getElementById('template-file-input');
 
-
-  const viewPdfButton = document.getElementById('view-pdf-button');
+  const viewPdfButton = document.getElementById('open-form-fullscreen-btn');
   const printTemplateSelect = document.getElementById('print_template_select');
+
+  const formOverlay = document.getElementById('form-fullscreen');
+  const closeFormBtn = document.getElementById('close-form-fullscreen-btn');
+  const formIframe = document.getElementById('pdfme-form-iframe');
 
   if (viewPdfButton && printTemplateSelect) {
     viewPdfButton.addEventListener('click', function() {
       const selectedTemplateId = printTemplateSelect.value;
       if (selectedTemplateId) {
-        // TODO: Implement the logic to open the PDF Viewer with the selected template
-        alert('PDF Viewer will open for template ID: ' + selectedTemplateId);
+        // Open the form overlay and send the selected template ID
+        document.getElementById('form-fullscreen').style.display = 'block';
+        document.getElementById('pdfme-form-iframe').contentWindow.postMessage({
+          type: 'loadSelectedTemplate',
+          templateId: selectedTemplateId
+        }, window.location.origin);
       } else {
         alert('Please select a print template.');
       }
+    });
+  }
+
+  // Close button logic
+  if (closeFormBtn) {
+    closeFormBtn.addEventListener('click', function() {
+      formOverlay.style.display = 'none';
+      formIframe.src = formIframe.src; // Refresh the iframe
     });
   }
 
@@ -65,15 +80,12 @@ document.addEventListener("DOMContentLoaded", function() {
   if (templateDownloadBtn) {
     templateDownloadBtn.addEventListener('click', function() {
       const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
-
-      // Retrieve the selected tracker name
       const trackerSelect = document.getElementById('print_template_tracker_id');
       const trackerName = trackerSelect.options[trackerSelect.selectedIndex].text;
 
-      // Send a message to the iFrame with the tracker name
       iframeWindow.postMessage({
         type: 'triggerDownloadTemplate',
-        trackerName: trackerName
+        data: { trackerName: trackerName }  // Enclose trackerName within a data object
       }, window.location.origin);
     });
   }
@@ -89,12 +101,17 @@ document.addEventListener("DOMContentLoaded", function() {
       if (file && file.type === "application/json") {
         const reader = new FileReader();
         reader.onload = function(e) {
-          const templateData = JSON.parse(e.target.result);
-          const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
-          iframeWindow.postMessage({
-            type: 'loadTemplate',
-            templateData: templateData
-          }, window.location.origin);
+          try {
+            const templateData = JSON.parse(e.target.result);
+            const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
+            iframeWindow.postMessage({
+              type: 'loadTemplate',
+              data: { templateData: templateData }
+            }, window.location.origin);
+          } catch (error) {
+            console.error('Failed to parse template file:', error);
+            alert('Invalid JSON template file.');
+          }
         };
         reader.readAsText(file);
       } else {
@@ -156,12 +173,16 @@ document.addEventListener("DOMContentLoaded", function() {
       designerOverlay.style.display = 'block';
       const iframeWindow = iframe.contentWindow;
 
+      // Parse schemas and inputs into arrays
+      const parsedSchemas = schemasField.value ? JSON.parse(schemasField.value) : [];
+      const parsedInputs = inputsField.value ? JSON.parse(inputsField.value) : [{}];
+
       iframeWindow.postMessage({
         type: 'initialData',
         data: {
           basePdf: basepdfField.value,
-          schemas: schemasField.value,
-          inputs: inputsField.value
+          schemas: parsedSchemas,
+          inputs: parsedInputs
         }
       }, window.location.origin);
     });

@@ -1,28 +1,25 @@
 class PrintTemplatesPdfmeController < ApplicationController
   unloadable
   layout false
-  before_action :require_admin
 
   def designer
+    # Check if the user is an admin
+    unless User.current.admin?
+      render_403 # Renders a 403 error page
+      return
+    end
+
     # Designer action code here
   end
 
-  # Future actions for viewer, generator, etc.
-  # def form
-  # end
+  def form
+    # Form action code here
+  end
 
+  # Future actions for viewer, generator, etc.
   # def viewer
   # end
 
   # def generator
   # end
-
-  private
-
-  def require_admin
-    unless User.current.admin?
-      render_403 # Renders a 403 error page
-      return
-    end
-  end
 end

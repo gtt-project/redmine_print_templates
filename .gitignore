@@ -3,5 +3,5 @@
 node_modules/
 
 # Ignore webpack generated files
-assets/javascripts/pdfme.*
+assets/javascripts/pdfme*
 assets/javascripts/node_modules_*
