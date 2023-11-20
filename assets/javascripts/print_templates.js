@@ -26,12 +26,23 @@ document.addEventListener("DOMContentLoaded", function() {
     viewPdfButton.addEventListener('click', function() {
       const selectedTemplateId = printTemplateSelect.value;
       if (selectedTemplateId) {
-        // Open the form overlay and send the selected template ID
-        document.getElementById('form-fullscreen').style.display = 'block';
-        document.getElementById('pdfme-form-iframe').contentWindow.postMessage({
-          type: 'loadSelectedTemplate',
-          templateId: selectedTemplateId
-        }, window.location.origin);
+        // Fetch the template data from the server
+        Rails.ajax({
+          url: `/print_templates/${selectedTemplateId}.json`,
+          type: 'GET',
+          dataType: 'json',
+          success: function(response) {
+            // Open the form overlay and send the fetched template data
+            formOverlay.style.display = 'block';
+            formIframe.contentWindow.postMessage({
+              type: 'loadSelectedTemplate',
+              templateData: response
+            }, window.location.origin);
+          },
+          error: function(error) {
+            console.error('Error fetching template data:', error);
+          }
+        });
       } else {
         alert('Please select a print template.');
       }

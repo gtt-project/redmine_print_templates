@@ -43,6 +43,14 @@ class PrintTemplatesController < ApplicationController
     end
   end
 
+  def show
+    @print_template = PrintTemplate.find(params[:id])
+    respond_to do |format|
+      format.json { render json: @print_template }
+      format.js
+    end
+  end
+
   def fields_for_tracker
     @tracker = Tracker.find(params[:tracker_id])
 

@@ -1,7 +1,7 @@
 # config/routes.rb
 
 # Standard CRUD routes for print templates
-resources :print_templates, only: %i(index new create edit update destroy) do
+resources :print_templates, only: %i(index new create edit update destroy show) do
   # Nested routes for PDFme functionalities
   get 'designer', to: 'print_templates_pdfme#designer', on: :collection
   get 'form', to: 'print_templates_pdfme#form', on: :collection

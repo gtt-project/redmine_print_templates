@@ -1,53 +1,44 @@
 import { Template, BLANK_PDF } from '@pdfme/common';
 import { Form } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
-import { v4 as uuidv4 } from 'uuid';
 
 document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById('pdfme-container');
-  let form: Form | undefined;
+  let form;
 
-  if (!form && container) {
-    form = new Form({
-      domContainer: container,
-      template: { basePdf: BLANK_PDF, schemas: [] },
-      inputs: [{}]
-    });
-  }
-
-  // Function to update the Form instance with a new template
-  // function updateForm(template: Template, inputs: any[]) {
-  //   if (form) {
-  //     form.updateTemplate({ ...template });
-  //   }
-  // }
-
-  // Listen for messages from the parent page
   window.addEventListener('message', function(event) {
     if (event.origin !== window.location.origin) {
       return;
     }
 
-    const { type, data } = event.data;
+    const { type, templateData } = event.data;
 
     switch (type) {
       case 'loadSelectedTemplate':
-        // You will need to fetch the template data using the templateId
-        // For now, let's assume `fetchTemplateById` is a function that does this
-        // fetchTemplateById(data.templateId).then(templateData => {
-        //   updateForm(templateData.template, templateData.inputs);
-        // });
+        if (container && templateData) {
+          // Parse schemas and inputs from JSON strings to JavaScript arrays
+          const schemas = JSON.parse(templateData.schemas || '[]');
+          const inputs = JSON.parse(templateData.inputs || '[{}]');
+
+          // Use BLANK_PDF as a fallback if basePdf is not provided
+          const basePdf = templateData.basepdf || BLANK_PDF;
+
+          // Define the template structure
+          const template: Template = {
+            basePdf: basePdf,
+            schemas: schemas
+          };
+
+          // Recreate the Form instance with the new template and inputs
+          form = new Form({
+            domContainer: container,
+            template: template,
+            inputs: inputs,
+            plugins: { text, image, qrcode: barcodes.qrcode },
+          });
+        }
         break;
-      // Add other cases as needed
+      // Handle other cases if necessary
     }
   });
-
-  // Function to fetch template data by ID (you'll need to implement this)
-  // async function fetchTemplateById(templateId: string): Promise<{ template: Template, inputs: any[] }> {
-  //   // Fetch the template and inputs data from your backend
-  //   // Example:
-  //   // const response = await fetch(`/api/templates/${templateId}`);
-  //   // const data = await response.json();
-  //   // return data;
-  // }
 });
