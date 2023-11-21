@@ -18,3 +18,14 @@ ja:
   label_print_template_administration: "Manage print templates"
   field_issue_map: "Issue map"
   field_issue_url: "Issue URL"
+  print_templates_font_settings: "Custom Fonts"
+  label_print_template_font_file: "Font file"
+  label_print_template_font_name: "Font name"
+  button_print_template_font_upload: "Upload font"
+
+  # javascript:
+  confirm_delete_font: "Are you sure you want to delete this font?"
+  error_uploading_font: "Error during font upload."
+  error_deleting_font: "Error deleting font."
+  error_reading_file: "Error reading file."
+  provide_font_name_and_file: "Please provide both a font name and a file."

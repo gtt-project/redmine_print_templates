@@ -55,6 +55,41 @@ class PrintTemplatesController < ApplicationController
     end
   end
 
+  def upload_font
+    font_params = params.require(:font).permit(:name, :data)
+    decoded_data = decode_font_data(font_params[:data])
+
+    existing_font = Font.find_by(name: font_params[:name])
+    current_time = Time.current
+    timestamp_attributes = existing_font ? { updated_at: current_time } : { created_at: current_time, updated_at: current_time }
+
+    upserted_font = Font.upsert({
+      name: font_params[:name],
+      data: decoded_data,
+      fallback: font_params[:fallback] || false,
+      subset: font_params[:subset] || true
+    }.merge(timestamp_attributes), unique_by: :name)
+
+    if upserted_font
+      render json: { success: true, message: 'Font uploaded successfully.' }
+    else
+      render json: { success: false, message: 'Error uploading font.' }, status: :unprocessable_entity
+    end
+  rescue ActiveRecord::NotNullViolation => e
+    render json: { success: false, message: "Database error: #{e.message}" }, status: :unprocessable_entity
+  rescue => e
+    render json: { success: false, message: "Unexpected error: #{e.message}" }, status: :internal_server_error
+  end
+
+  def delete_font
+    font = Font.find(params[:id])
+    if font.destroy
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :unprocessable_entity
+    end
+  end
+
   def fields_for_tracker
     @tracker = Tracker.find(params[:tracker_id])
 
@@ -127,6 +162,11 @@ class PrintTemplatesController < ApplicationController
 
   def print_template_params
     params.require(:print_template).permit(:name, :schemas, :inputs, :basepdf, :tracker_id)
+  end
+
+  def decode_font_data(encoded_data)
+    # Strip off the Base64 prefix and decode
+    Base64.decode64(encoded_data.split(',').last)
   end
 
   def require_admin

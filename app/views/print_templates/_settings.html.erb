@@ -4,3 +4,39 @@
 <p>TBD</p>
 
 </div>
+
+<div class="box tabular settings">
+<h3><%= l(:print_templates_font_settings) %></h3>
+
+<p>
+  <label for="font_name"><%= l(:label_print_template_font_name) %></label>
+  <input type="text" id="font_name" size="40">
+</p>
+<p>
+  <label for="font_file"><%= l(:label_print_template_font_file) %></label>
+  <input type="file" id="font_file" accept=".ttf">
+</p>
+
+<p>
+  <% fonts = RedminePrintTemplates.fonts %>
+  <ul>
+  <% fonts.each do |font| %>
+    <li id="font-<%= font[:id] %>">
+      <%= font[:name] %> [<%= font[:size_mb] %> MB] |
+      <%= link_to 'Delete', '#', onclick: "deleteFont(#{font[:id]})", remote: true %>
+    </li>
+  <% end %>
+  </ul>
+</p>
+
+</div>
+
+<script>
+  var localization = {
+    confirmDeleteFont: "<%= l(:confirm_delete_font) %>",
+    errorUploadingFont: "<%= l(:error_uploading_font) %>",
+    errorDeletingFont: "<%= l(:error_deleting_font) %>",
+    errorReadingFile: "<%= l(:error_reading_file) %>",
+    provideFontNameAndFile: "<%= l(:provide_font_name_and_file) %>"
+  };
+</script>

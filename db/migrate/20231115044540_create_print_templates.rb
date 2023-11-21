@@ -4,7 +4,7 @@ class CreatePrintTemplates < ActiveRecord::Migration[6.1]
       t.string :name
       t.jsonb :schemas
       t.jsonb :inputs
-      t.text :basepdf
+      t.binary :basepdf
       t.integer :tracker_id
 
       t.timestamps

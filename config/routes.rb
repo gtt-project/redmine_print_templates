@@ -12,3 +12,9 @@ get 'print_templates/fields_for_tracker', to: 'print_templates#fields_for_tracke
 
 # Explicitly define the 'show' route
 get 'print_templates/show/:id', to: 'print_templates#show', as: :show_print_template, constraints: { id: /\d+/ }
+
+# Route to upload fonts
+post 'print_templates/upload_font', to: 'print_templates#upload_font'
+
+# Route to delete fonts
+delete '/print_templates/delete_font/:id', to: 'print_templates#delete_font', constraints: { id: /\d+/ }

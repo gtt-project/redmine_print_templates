@@ -4,6 +4,7 @@ module RedminePrintTemplates
     def view_layouts_base_body_bottom(context={})
       tags = []
       if User.current.admin?
+        tags << javascript_include_tag('print_templates_font.js', plugin: 'redmine_print_templates')
         tags << javascript_include_tag('print_templates_designer.js', plugin: 'redmine_print_templates')
       end
       if User.current.allowed_to?(:view_print_templates, context[:project], global: true)
