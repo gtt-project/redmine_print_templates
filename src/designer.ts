@@ -12,6 +12,14 @@ document.addEventListener("DOMContentLoaded", function() {
       domContainer: container,
       template: { basePdf: BLANK_PDF, schemas: [], sampledata: [{}] },
       plugins: { text, image, qrcode: barcodes.qrcode },
+      options: {
+        // lang: 'ja',
+        theme: {
+          token: {
+            colorPrimary: '#f1515c'
+          },
+        },
+      },
     });
 
     designer.onChangeTemplate((updatedTemplate: Template) => {
