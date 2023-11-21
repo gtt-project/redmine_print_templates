@@ -2,6 +2,8 @@ class PrintTemplatesPdfmeController < ApplicationController
   unloadable
   layout false
 
+  before_action :authorize_view_print_templates
+
   def designer
     # Check if the user is an admin
     unless User.current.admin?
@@ -22,4 +24,10 @@ class PrintTemplatesPdfmeController < ApplicationController
 
   # def generator
   # end
+
+  private
+
+  def authorize_view_print_templates
+    deny_access unless User.current.allowed_to?(:view_print_templates, @project, global: true)
+  end
 end

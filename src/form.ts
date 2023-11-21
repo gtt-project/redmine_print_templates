@@ -1,10 +1,11 @@
 import { Template, BLANK_PDF } from '@pdfme/common';
 import { Form } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
+import { generate } from '@pdfme/generator';
 
 document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById('pdfme-container');
-  let form;
+  let form: Form | undefined;
 
   window.addEventListener('message', function(event) {
     if (event.origin !== window.location.origin) {
@@ -38,7 +39,25 @@ document.addEventListener("DOMContentLoaded", function() {
           });
         }
         break;
-      // Handle other cases if necessary
+
+      case 'generatePdf':
+        if (form) {
+          const currentInputs = form.getInputs();
+
+          generate({
+            template: form.getTemplate(),
+            inputs: currentInputs,
+            plugins: { text, image, qrcode: barcodes.qrcode },
+          }).then((pdf) => {
+            const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
+            const pdfUrl = URL.createObjectURL(blob);
+            window.open(pdfUrl);
+          }).catch((error) => {
+            console.error('Error generating PDF:', error);
+          });
+        }
+        break;
+        // Handle other cases if necessary
     }
   });
 });

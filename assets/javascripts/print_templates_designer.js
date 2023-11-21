@@ -15,48 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
   const templateFileInput = document.getElementById('template-file-input');
 
-  const viewPdfButton = document.getElementById('open-form-fullscreen-btn');
-  const printTemplateSelect = document.getElementById('print_template_select');
-
-  const formOverlay = document.getElementById('form-fullscreen');
-  const closeFormBtn = document.getElementById('close-form-fullscreen-btn');
-  const formIframe = document.getElementById('pdfme-form-iframe');
-
-  if (viewPdfButton && printTemplateSelect) {
-    viewPdfButton.addEventListener('click', function() {
-      const selectedTemplateId = printTemplateSelect.value;
-      if (selectedTemplateId) {
-        // Fetch the template data from the server
-        Rails.ajax({
-          url: `/print_templates/${selectedTemplateId}.json`,
-          type: 'GET',
-          dataType: 'json',
-          success: function(response) {
-            // Open the form overlay and send the fetched template data
-            formOverlay.style.display = 'block';
-            formIframe.contentWindow.postMessage({
-              type: 'loadSelectedTemplate',
-              templateData: response
-            }, window.location.origin);
-          },
-          error: function(error) {
-            console.error('Error fetching template data:', error);
-          }
-        });
-      } else {
-        alert('Please select a print template.');
-      }
-    });
-  }
-
-  // Close button logic
-  if (closeFormBtn) {
-    closeFormBtn.addEventListener('click', function() {
-      formOverlay.style.display = 'none';
-      formIframe.src = formIframe.src; // Refresh the iframe
-    });
-  }
-
   // Function to update fields dropdown
   function loadTrackerData() {
     if (trackerIdSelect) {

@@ -5,6 +5,10 @@ class PrintTemplatesController < ApplicationController
 
   before_action :set_trackers, only: [:new, :create, :edit, :update]
   before_action :find_print_template, only: [:edit, :update, :destroy]
+  before_action :require_admin, except: [:show, :fields_for_tracker]
+
+  # TODO: make this work with Rails.ajax
+  # before_action :authorize_view_print_templates, only: [:show, :fields_for_tracker]
 
   def index
     @print_templates = PrintTemplate.includes(:tracker).all
@@ -112,5 +116,13 @@ class PrintTemplatesController < ApplicationController
 
   def print_template_params
     params.require(:print_template).permit(:name, :schemas, :inputs, :basepdf, :tracker_id)
+  end
+
+  def require_admin
+    render_403 unless User.current.admin?
+  end
+
+  def authorize_view_print_templates
+    deny_access unless User.current.allowed_to?(:view_print_templates, @project, global: true)
   end
 end
