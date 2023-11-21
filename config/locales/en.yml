@@ -16,4 +16,5 @@ en:
   label_select_print_template: "Select a template from the list:"
   label_no_print_template_available: "No print templates are available for this issue's tracker type."
   label_print_template_administration: "Manage print templates"
-  field_map: "Map"
+  field_issue_map: "Issue map"
+  field_issue_url: "Issue URL"

@@ -76,3 +76,8 @@ table.list.printtemplates tbody td.text div { height: 3.8em; }
   margin-top: 3px;
   margin-bottom: 3px;
 }
+
+#designer-button-bar optgroup {
+  font-weight: bold;
+  text-align: left;
+}

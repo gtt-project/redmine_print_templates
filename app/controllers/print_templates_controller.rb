@@ -58,46 +58,47 @@ class PrintTemplatesController < ApplicationController
   def fields_for_tracker
     @tracker = Tracker.find(params[:tracker_id])
 
-    # Define core fields and their formats (if known)
-    core_fields = {
-      'status_id' => 'text',
-      'priority_id' => 'text',
-      'assigned_to_id' => 'text',
-      'category_id' => 'text',
-      'fixed_version_id' => 'text',
-      'subject' => 'text',
-      'description' => 'text',
-      'start_date' => 'date',
-      'due_date' => 'date'
-    }
+    # Define core fields
+    @core_fields = {
+      'author_id' => ['text', 'field_author'],
+      'status_id' => ['text', 'field_status'],
+      'priority_id' => ['text', 'field_priority'],
+      'assigned_to_id' => ['text', 'field_assigned_to'],
+      'category_id' => ['text', 'field_category'],
+      'fixed_version_id' => ['text', 'field_fixed_version'],
+      'subject' => ['text', 'field_subject'],
+      'description' => ['text', 'field_description'],
+      'start_date' => ['date', 'field_start_date'],
+      'due_date' => ['date', 'field_due_date'],
+      'done_ratio' => ['text', 'field_done_ratio'],
+      'estimated_hours' => ['text', 'field_estimated_hours'],
+      'total_estimated_hours' => ['text', 'field_total_estimated_hours'],
+      'spent_hours' => ['text', 'label_spent_time'],
+      'total_spent_hours' => ['text', 'label_total_spent_time'],
+      'created_on' => ['date', 'field_created_on'],
+      'updated_on' => ['date', 'field_updated_on'],
+      'closed_on' => ['date', 'field_closed_on'],
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
 
-    @fields = core_fields.map do |field, format|
-      field_key = field.end_with?('_id') ? field[0...-3] : field
-      {
-        name: I18n.t("field_#{field_key}"),
-        identifier: field,
-        format: format
-      }
+    # Define custom fields with their names directly
+    @custom_fields = @tracker.custom_fields.map do |cf|
+      field_identifier = "issue_custom_field_values_#{cf.id}"
+      field_format = cf.field_format
+      field_name = cf.name
+
+      create_field_hash(field_identifier, field_format, field_name)
     end
 
-    # Add custom fields with their specific format
-    # TODO: match Redmine format terms with PDFme format terms
-    @tracker.custom_fields.each do |cf|
-      @fields << {
-        name: cf.name,
-        identifier: "issue_custom_field_values_#{cf.id}",
-        format: cf.field_format
-      }
-    end
+    # Define special fields with localization keys
+    @special_fields = {
+      'issue_map' => ['image', 'field_issue_map'],
+      'issue_url' => ['barcodes.qrcode', 'field_issue_url']
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
 
-    # Add the special 'geom' field
-    @fields << {
-      name: I18n.t("field_map"),
-      identifier: 'geom',
-      format: 'image'
-    }
-
-    @fields.sort_by! { |field| field[:name].downcase }
+    # Sorting
+    @core_fields.sort_by! { |field| field[:name].downcase }
+    @custom_fields.sort_by! { |field| field[:name].downcase }
+    @special_fields.sort_by! { |field| field[:name].downcase }
 
     respond_to do |format|
       format.js
@@ -105,6 +106,16 @@ class PrintTemplatesController < ApplicationController
   end
 
   private
+
+  def create_field_hash(field, format, name_or_key)
+    name = I18n.exists?(name_or_key) ? I18n.t(name_or_key) : name_or_key
+
+    {
+      name: name,
+      identifier: field,
+      format: format
+    }
+  end
 
   def set_trackers
     @trackers = Tracker.order(:position)
