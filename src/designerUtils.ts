@@ -38,19 +38,20 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
   // Fetch the current template state
   const currentTemplate = designer.getTemplate();
 
-  // Create a deep clone of the current schemas to avoid direct mutation
+  // Create a deep clone of the current schemas and sampledata to avoid direct mutation
   const updatedSchemas = JSON.parse(JSON.stringify(currentTemplate.schemas));
+  const updatedSampledata = JSON.parse(JSON.stringify(currentTemplate.sampledata));
 
-  // Ensure fieldData contains all required properties
+  // Define default properties for the new field
   const defaultFieldData = {
-    type: "text", // Default type
-    x: 25,       // Default X-coordinate
-    y: 30,       // Default Y-coordinate
-    width: 80,   // Default width
-    height: 10   // Default height
+    type: "text",
+    x: 0,
+    y: 0,
+    width: 80,
+    height: 10
   };
 
-  // Use fieldData properties or defaults
+  // Create the new schema
   const newSchema = {
     type: fieldData.type || defaultFieldData.type,
     position: {
@@ -62,23 +63,32 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
     // Add other properties if needed
   };
 
-  // Check if the first object in the schemas array exists, if not create it
+  // Generate a unique key for the new schema
+  const newSchemaKey = `$(${fieldData.identifier})#${uuidv4().substring(0, 4)}`;
+
+  // Generate a value for the sampledata without the UUID
+  const sampleDataValue = `$(${fieldData.identifier})`;
+
+  // Add the new schema to the updatedSchemas
   if (!updatedSchemas[0]) {
     updatedSchemas[0] = {};
   }
-
-  // Generate a unique key for the new schema with a 4-digit random string
-  const newSchemaKey = `$(${fieldData.identifier})#${uuidv4().substring(0, 4)}`;
-
-  // Add the new schema to the first object in the schemas array
   updatedSchemas[0][newSchemaKey] = newSchema;
+
+  // Add an entry for the new field in the sampledata
+  if (updatedSampledata.length === 0) {
+    updatedSampledata.push({});
+  }
+  updatedSampledata[0][newSchemaKey] = sampleDataValue; // Set default value for the new field
 
   // Update the Designer instance with the new template
   designer.updateTemplate({
     ...currentTemplate,
-    schemas: updatedSchemas
+    schemas: updatedSchemas,
+    sampledata: updatedSampledata
   });
 }
+
 
 export function downloadTemplate(designer: Designer, trackerName: string) {
   if (designer) {
