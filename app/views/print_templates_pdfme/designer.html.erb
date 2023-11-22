@@ -3,30 +3,7 @@
 <head>
   <% plugin_name = Redmine::Plugin.find(:redmine_print_templates).name rescue 'Print Templates' %>
   <title><%= "#{plugin_name} - Designer" %></title>
-  <style type="text/css">
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    #pdfme-container {
-      height: 100%;
-      width: 100%;
-    }
-
-    #pdfme-loading {
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 2em;
-      font-weight: bold;
-      font-family: sans-serif;
-    }
-  </style>
+  <%= stylesheet_link_tag('print_pdfme', plugin: 'redmine_print_templates') %>
 </head>
 <body>
   <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Designer...</div></div>
