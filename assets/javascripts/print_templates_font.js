@@ -75,26 +75,29 @@ function clearFontFields() {
 
 // Form submission interception
 document.addEventListener('DOMContentLoaded', function() {
-  var container = document.querySelector('#settings.plugin.plugin-redmine_print_templates');
-  var form = container.querySelector('form');
+  const container = document.querySelector('#settings.plugin.plugin-redmine_print_templates');
 
-  if (form) {
-    form.addEventListener('submit', function(event) {
-      const fontFile = document.getElementById('font_file').files[0];
+  if (container) {
+    const form = container.querySelector('form');
 
-      if (fontFile) {
-        event.preventDefault(); // Prevent default form submission if a file is selected
-        uploadFontFile().then(() => {
-          form.submit(); // Manually submit the form after successful font upload
-        }).catch((error) => {
-          console.error(`${localization.errorUploadingFont}: `, error);
-          alert(localization.errorUploadingFont);
-          clearFontFields(); // Clear the input fields
-        });
-      }
-      // If no file is selected, the form submits normally
-    });
-  } else {
-    console.error('Form not found');
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        const fontFile = document.getElementById('font_file').files[0];
+
+        if (fontFile) {
+          event.preventDefault(); // Prevent default form submission if a file is selected
+          uploadFontFile().then(() => {
+            form.submit(); // Manually submit the form after successful font upload
+          }).catch((error) => {
+            console.error(`${localization.errorUploadingFont}: `, error);
+            alert(localization.errorUploadingFont);
+            clearFontFields(); // Clear the input fields
+          });
+        }
+        // If no file is selected, the form submits normally
+      });
+    } else {
+      console.error('Form not found');
+    }
   }
 });
