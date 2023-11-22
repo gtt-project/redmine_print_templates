@@ -68,7 +68,7 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
   }
 
   // Generate a unique key for the new schema with a 4-digit random string
-  const newSchemaKey = `field.${fieldData.identifier}.${uuidv4().substring(0, 4)}`;
+  const newSchemaKey = `$(${fieldData.identifier})#${uuidv4().substring(0, 4)}`;
 
   // Add the new schema to the first object in the schemas array
   updatedSchemas[0][newSchemaKey] = newSchema;
