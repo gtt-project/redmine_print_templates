@@ -3,17 +3,27 @@ import { Designer } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
 import { initializeOrUpdateDesigner, addFieldToDesigner, downloadTemplate, downloadJsonFile, loadTemplate } from './designerUtils';
 
+// Manually specify the supported locales based on your dictionaries
+const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl'];
+
 document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById('pdfme-container');
   let designer: Designer | undefined;
 
   if (!designer && container) {
+    // Determine the current locale from the HTML lang attribute or use a fallback to "en"
+    const htmlLang = document.documentElement.lang || 'en';
+    const locale = htmlLang.split('-')[0]; // Extract the language part
+
+    // Validate if the locale is one of the supported locales
+    const validatedLocale = supportedLocales.includes(locale) ? locale : 'en';
+
     designer = new Designer({
       domContainer: container,
       template: { basePdf: BLANK_PDF, schemas: [], sampledata: [{}] },
       plugins: { text, image, qrcode: barcodes.qrcode },
       options: {
-        // lang: 'ja',
+        lang: validatedLocale as "en" | "ja" | "ar" | "th" | "it" | "pl", // Type assertion
         theme: {
           token: {
             colorPrimary: '#f1515c'

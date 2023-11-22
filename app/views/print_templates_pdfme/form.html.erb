@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale.to_s %>">
 <head>
   <% plugin_name = Redmine::Plugin.find(:redmine_print_templates).name rescue 'Print Templates' %>
   <title><%= "#{plugin_name} - Form" %></title>
