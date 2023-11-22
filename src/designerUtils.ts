@@ -3,6 +3,8 @@ import { Designer } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
 import { v4 as uuidv4 } from 'uuid';
 
+type FieldType = 'text' | 'image' | 'qrcode';
+
 export function initializeOrUpdateDesigner(designer: Designer | undefined, container: HTMLElement | null, basePdf: string, schemas: any[], inputs: any[]): Designer | undefined {
   const template: Template = {
     basePdf: basePdf || BLANK_PDF,
@@ -42,25 +44,17 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
   const updatedSchemas = JSON.parse(JSON.stringify(currentTemplate.schemas));
   const updatedSampledata = JSON.parse(JSON.stringify(currentTemplate.sampledata));
 
-  // Define default properties for the new field
-  const defaultFieldData = {
-    type: "text",
-    x: 0,
-    y: 0,
-    width: 80,
-    height: 10
-  };
+  const fieldType: FieldType = (fieldData.format && ['text', 'image', 'qrcode'].includes(fieldData.format)) ? fieldData.format as FieldType : 'text';
+  const defaultFieldData = getDefaultFieldData(fieldType);
 
-  // Create the new schema
   const newSchema = {
-    type: fieldData.type || defaultFieldData.type,
+    type: fieldType,
     position: {
-      x: fieldData.x || defaultFieldData.x,
-      y: fieldData.y || defaultFieldData.y
+      x: (fieldData.x !== undefined) ? fieldData.x : defaultFieldData.x,
+      y: (fieldData.y !== undefined) ? fieldData.y : defaultFieldData.y
     },
-    width: fieldData.width || defaultFieldData.width,
-    height: fieldData.height || defaultFieldData.height
-    // Add other properties if needed
+    width: (fieldData.width !== undefined) ? fieldData.width : defaultFieldData.width,
+    height: (fieldData.height !== undefined) ? fieldData.height : defaultFieldData.height
   };
 
   // Generate a unique key for the new schema
@@ -89,6 +83,15 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
   });
 }
 
+function getDefaultFieldData(type: FieldType) {
+  const defaults: Record<FieldType, { width: number; height: number; x: number; y: number }> = {
+    text: { width: 80, height: 10, x: 0, y: 0 },
+    image: { width: 40, height: 40, x: 0, y: 0 },
+    qrcode: { width: 30, height: 30, x: 0, y: 0 }
+  };
+
+  return defaults[type] || defaults['text'];
+}
 
 export function downloadTemplate(designer: Designer, trackerName: string) {
   if (designer) {

@@ -127,7 +127,7 @@ class PrintTemplatesController < ApplicationController
     # Define special fields with localization keys
     @special_fields = {
       'issue_map' => ['image', 'field_issue_map'],
-      'issue_url' => ['barcodes.qrcode', 'field_issue_url']
+      'issue_url' => ['qrcode', 'field_issue_url']
     }.map { |field, attributes| create_field_hash(field, *attributes) }
 
     # Sorting
