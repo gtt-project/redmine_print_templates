@@ -65,6 +65,9 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('template-file-input').click();
     });
 
+    // Assuming BLANK_PDF_DATA_URL is the known blank PDF data URL from PDFme
+    const BLANK_PDF_DATA_URL = "data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDM4Cj4+CnN0cmVhbQp4nCvkMlAwUDC1NNUzMVGwMDHUszRSKErlCtfiyuMK5AIAXQ8GCgplbmRzdHJlYW0KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL01lZGlhQm94IFswIDAgNTk1LjQ0IDg0MS45Ml0KL1Jlc291cmNlcyA8PAo+PgovQ29udGVudHMgNSAwIFIKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0tpZHMgWzQgMCBSXQovQ291bnQgMQo+PgplbmRvYmoKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL3RyYXBwZWQgKGZhbHNlKQovQ3JlYXRvciAoU2VyaWYgQWZmaW5pdHkgRGVzaWduZXIgMS4xMC40KQovVGl0bGUgKFVudGl0bGVkLnBkZikKL0NyZWF0aW9uRGF0ZSAoRDoyMDIyMDEwNjE0MDg1OCswOScwMCcpCi9Qcm9kdWNlciAoaUxvdmVQREYpCi9Nb2REYXRlIChEOjIwMjIwMTA2MDUwOTA5WikKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAxIDAgUgovSW5mbyAzIDAgUgovSUQgWzwyODhCM0VENTAyOEU0MDcyNERBNzNCOUE0Nzk4OUEwQT4gPEY1RkJGNjg4NkVERDZBQUNBNDRCNEZDRjBBRDUxRDlDPl0KL1R5cGUgL1hSZWYKL1cgWzEgMiAyXQovRmlsdGVyIC9GbGF0ZURlY29kZQovSW5kZXggWzAgN10KL0xlbmd0aCAzNgo+PgpzdHJlYW0KeJxjYGD4/5+RUZmBgZHhFZBgDAGxakAEP5BgEmFgAABlRwQJCmVuZHN0cmVhbQplbmRvYmoKc3RhcnR4cmVmCjUzMgolJUVPRgo=";
+
     templateFileInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file && file.type === "application/json") {
@@ -72,6 +75,20 @@ document.addEventListener("DOMContentLoaded", function() {
         reader.onload = function(e) {
           try {
             const templateData = JSON.parse(e.target.result);
+
+            // Check if uploaded 'basePdf' is the same as the blank PDF data URL
+            if (templateData.basePdf === BLANK_PDF_DATA_URL) {
+              basepdfField.value = '';
+            } else if (templateData.basePdf) {
+              basepdfField.value = templateData.basePdf;
+            } else {
+              basepdfField.value = ''; // Reset if 'basePdf' is not provided
+            }
+
+            // Toggle visibility of basepdf controls
+            toggleBasePDFControls();
+
+            // Post the remaining data to the iframe
             const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
             iframeWindow.postMessage({
               type: 'loadTemplate',

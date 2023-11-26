@@ -3,6 +3,7 @@ import { Designer } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
 import { v4 as uuidv4 } from 'uuid';
 
+import { mapIconDataUrl } from './mapIconDataUrl';
 type FieldType = 'text' | 'image' | 'qrcode';
 
 export function initializeOrUpdateDesigner(designer: Designer | undefined, container: HTMLElement | null, basePdf: string, schemas: any[], inputs: any[]): Designer | undefined {
@@ -61,7 +62,15 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
   const newSchemaKey = `$(${fieldData.identifier})#${uuidv4().substring(0, 4)}`;
 
   // Generate a value for the sampledata without the UUID
-  const sampleDataValue = `$(${fieldData.identifier})`;
+  let sampleDataValue: string;
+  if (fieldType === 'image') {
+    sampleDataValue = mapIconDataUrl;
+  } else if (fieldType === 'qrcode') {
+    sampleDataValue = window.location.host;
+  } else {
+    // For other types, use the standard sample data value
+    sampleDataValue = `$(${fieldData.identifier})`;
+  }
 
   // Add the new schema to the updatedSchemas
   if (!updatedSchemas[0]) {
