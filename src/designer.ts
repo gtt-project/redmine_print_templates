@@ -1,46 +1,66 @@
-import { Template, BLANK_PDF } from '@pdfme/common';
+import { Template, BLANK_PDF, getDefaultFont } from '@pdfme/common';
 import { Designer } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
-import { initializeOrUpdateDesigner, addFieldToDesigner, downloadTemplate, downloadJsonFile, loadTemplate } from './designerUtils';
+import { initializeOrUpdateDesigner, addFieldToDesigner, downloadTemplate, loadTemplate } from './designerUtils';
+import { validateLocale, SupportedLocale } from './locales';
 
-// Manually specify the supported locales based on your dictionaries
-const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl'];
+interface FontData {
+  name: string;
+  url: string;
+}
+
+declare const embeddedFonts: FontData[];
 
 document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById('pdfme-container');
   let designer: Designer | undefined;
 
   if (!designer && container) {
-    // Determine the current locale from the HTML lang attribute or use a fallback to "en"
     const htmlLang = document.documentElement.lang || 'en';
     const locale = htmlLang.split('-')[0]; // Extract the language part
+    const validatedLocale: SupportedLocale = validateLocale(locale);
 
-    // Validate if the locale is one of the supported locales
-    const validatedLocale = supportedLocales.includes(locale) ? locale : 'en';
+    async function initializeDesigner() {
+      // Set the default fonts
+      const availableFonts = getDefaultFont();
 
-    designer = new Designer({
-      domContainer: container,
-      template: { basePdf: BLANK_PDF, schemas: [], sampledata: [{}] },
-      plugins: { text, image, qrcode: barcodes.qrcode },
-      options: {
-        lang: validatedLocale as "en" | "ja" | "ar" | "th" | "it" | "pl", // Type assertion
-        theme: {
-          token: {
-            colorPrimary: '#f1515c'
+      for (const font of embeddedFonts) {
+        const response = await fetch(font.url);
+        const arrayBuffer = await response.arrayBuffer();
+
+        availableFonts[font.name] = {
+          data: arrayBuffer,
+          // include fallback and subset options if necessary
+        };
+      }
+
+      designer = new Designer({
+        domContainer: container,
+        template: { basePdf: BLANK_PDF, schemas: [], sampledata: [{}] },
+        plugins: { text, image, qrcode: barcodes.qrcode },
+        options: {
+          lang: validatedLocale,
+          theme: {
+            token: {
+              colorPrimary: '#f1515c'
+            },
           },
+          font: availableFonts
         },
-      },
-    });
+      });
 
-    designer.onChangeTemplate((updatedTemplate: Template) => {
-      window.parent.postMessage({
-        type: 'updateData',
-        data: {
-          schemas: updatedTemplate.schemas,
-          inputs: updatedTemplate.sampledata || [{}]
-        }
-      }, window.location.origin);
-    });
+      designer.onChangeTemplate((updatedTemplate: Template) => {
+        window.parent.postMessage({
+          type: 'updateData',
+          data: {
+            schemas: updatedTemplate.schemas,
+            inputs: updatedTemplate.sampledata || [{}]
+          }
+        }, window.location.origin);
+      });
+    }
+
+    initializeDesigner();
   }
 
   // Listen for messages from the parent page
