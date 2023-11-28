@@ -11,11 +11,23 @@ class PrintTemplatesPdfmeController < ApplicationController
       return
     end
 
-    # Designer action code here
+    # Retrieve fonts and sort them alphabetically by name
+    @fonts = Font.order(:name).map do |font|
+      {
+        name: font.name,
+        url: show_print_templates_fonts_path(name: font.name)
+      }
+    end
   end
 
   def form
-    # Form action code here
+    # Retrieve fonts and sort them alphabetically by name
+    @fonts = Font.order(:name).map do |font|
+      {
+        name: font.name,
+        url: show_print_templates_fonts_path(name: font.name)
+      }
+    end
   end
 
   # Future actions for viewer, generator, etc.

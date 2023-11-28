@@ -8,5 +8,8 @@
 <body>
   <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Form...</div></div>
   <%= javascript_include_tag 'pdfme-form', plugin: :redmine_print_templates %>
+  <script type="text/javascript">
+    var embeddedFonts = <%= raw @fonts.to_json %>;
+  </script>
 </body>
 </html>

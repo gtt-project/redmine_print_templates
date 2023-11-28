@@ -9,39 +9,28 @@ function uploadFontFile() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const encodedData = event.target.result;
-      const formData = new FormData();
-      formData.append('font[name]', fontName);
-      formData.append('font[data]', encodedData);
+    const formData = new FormData();
+    formData.append('font[name]', fontName);
+    formData.append('font[file]', fontFile); // Append the file directly
 
-      fetch('/print_templates/upload_font', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-      }).then(response => {
-        if (response.ok) {
-          resolve();
-        } else {
-          response.json().then(json => {
-            reject(`${localization.errorUploadingFont}: ` + json.message);
-          });
-        }
-      }).catch(error => {
-        console.error('Fetch error:', error.message);
-        reject('Fetch error: ' + error.message);
-      });
-    };
-
-    reader.onerror = function() {
-      console.error(localization.errorReadingFile);
-      reject(localization.errorReadingFile);
-    };
-
-    reader.readAsDataURL(fontFile);
+    fetch('/print_templates/fonts/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      }
+    }).then(response => {
+      if (response.ok) {
+        resolve();
+      } else {
+        response.json().then(json => {
+          reject(`${localization.errorUploadingFont}: ` + json.message);
+        });
+      }
+    }).catch(error => {
+      console.error('Fetch error:', error.message);
+      reject('Fetch error: ' + error.message);
+    });
   });
 }
 
@@ -50,7 +39,7 @@ function deleteFont(fontId) {
     return; // Do nothing if the user cancels the deletion
   }
 
-  fetch('/print_templates/delete_font/' + fontId, {
+  fetch('/print_templates/fonts/delete/' + fontId, {
     method: 'DELETE',
     headers: {
       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

@@ -6,7 +6,12 @@
   <%= stylesheet_link_tag('print_pdfme', plugin: 'redmine_print_templates') %>
 </head>
 <body>
-  <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Designer...</div></div>
+  <div id="pdfme-container">
+    <div id="pdfme-loading">Reload page to start PDFme Designer...</div>
+  </div>
   <%= javascript_include_tag 'pdfme-designer', plugin: :redmine_print_templates %>
+  <script type="text/javascript">
+    var embeddedFonts = <%= raw @fonts.to_json %>;
+  </script>
 </body>
 </html>
