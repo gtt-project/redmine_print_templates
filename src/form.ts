@@ -28,18 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
     switch (type) {
       case 'loadSelectedTemplate':
         if (container && templateData) {
-          // Use the embedded issue data directly
-          console.log('Issue data:', issueData);
-
-          // Process issue data here and modify templateData.inputs as needed
-          // ...
-
           // Parse schemas and inputs from JSON strings to JavaScript arrays
           const schemas = JSON.parse(templateData.schemas || '[]');
-          const inputs = JSON.parse(templateData.inputs || '[{}]');
-
-          console.log('Schemas:', schemas);
-          console.log('Inputs:', inputs);
+          const inputs = [mapIssueDataToTemplate(issueData, schemas)] || [{}];
 
           // Use BLANK_PDF as a fallback if basePdf is not provided
           const basePdf = templateData.basepdf || BLANK_PDF;
@@ -60,7 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
               availableFonts[font.name] = {
                 data: arrayBuffer,
-                // include fallback and subset options if necessary
               };
             }
 
@@ -71,6 +61,11 @@ document.addEventListener("DOMContentLoaded", function() {
               inputs: inputs,
               plugins: { text, image, qrcode: barcodes.qrcode },
               options: {
+                theme: {
+                  token: {
+                    colorPrimary: '#f1515c'
+                  },
+                },
                 font: availableFonts,
               },
             });
@@ -127,3 +122,41 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+
+function mapIssueDataToTemplate(issueData: any, template: any) {
+  const mappedInputs: any = {};
+
+  template.forEach((page: any) => {
+    Object.keys(page).forEach(key => {
+      const match = key.match(/\$\(([^#]+)#([^)]+)\)/);
+      if (match && match.length >= 3) {
+        const type = match[1];
+        const field = match[2];
+        let value = '';
+
+        switch (type) {
+          case 'standard':
+            const fields = field.split('.');
+            value = fields.reduce((acc, curr) => acc && acc[curr], issueData.issue);
+            break;
+          case 'custom':
+            const customField = issueData.issue.custom_fields.find((f: any) => f.name === field);
+            value = customField ? customField.value : '';
+            break;
+          case 'special':
+            // Handle special cases here
+            break;
+          default:
+            // Handle unknown type
+            break;
+        }
+
+        if (value !== undefined) {
+          mappedInputs[key] = String(value);
+        }
+      }
+    });
+  });
+
+  return mappedInputs;
+}
