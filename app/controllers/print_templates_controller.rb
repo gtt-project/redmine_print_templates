@@ -60,29 +60,29 @@ class PrintTemplatesController < ApplicationController
 
     # Define core fields
     @core_fields = {
-      'author.name' => ['text', 'field_author'],
-      'status.name' => ['text', 'field_status'],
-      'priority.name' => ['text', 'field_priority'],
-      'assigned_to.name' => ['text', 'field_assigned_to'],
-      'category.name' => ['text', 'field_category'],
-      'fixed_version.name' => ['text', 'field_fixed_version'],
-      'subject' => ['text', 'field_subject'],
-      'description' => ['text', 'field_description'],
-      'start_date' => ['date', 'field_start_date'],
-      'due_date' => ['date', 'field_due_date'],
-      'done_ratio' => ['text', 'field_done_ratio'],
-      'estimated_hours' => ['text', 'field_estimated_hours'],
-      'total_estimated_hours' => ['text', 'field_total_estimated_hours'],
-      'spent_hours' => ['text', 'label_spent_time'],
-      'total_spent_hours' => ['text', 'label_total_spent_time'],
-      'created_on' => ['date', 'field_created_on'],
-      'updated_on' => ['date', 'field_updated_on'],
-      'closed_on' => ['date', 'field_closed_on'],
+      'standard#author.name' => ['text', 'field_author'],
+      'standard#status.name' => ['text', 'field_status'],
+      'standard#priority.name' => ['text', 'field_priority'],
+      'standard#assigned_to.name' => ['text', 'field_assigned_to'],
+      'standard#category.name' => ['text', 'field_category'],
+      'standard#fixed_version.name' => ['text', 'field_fixed_version'],
+      'standard#subject' => ['text', 'field_subject'],
+      'standard#description' => ['text', 'field_description'],
+      'standard#start_date' => ['date', 'field_start_date'],
+      'standard#due_date' => ['date', 'field_due_date'],
+      'standard#done_ratio' => ['text', 'field_done_ratio'],
+      'standard#estimated_hours' => ['text', 'field_estimated_hours'],
+      'standard#total_estimated_hours' => ['text', 'field_total_estimated_hours'],
+      'standard#spent_hours' => ['text', 'label_spent_time'],
+      'standard#total_spent_hours' => ['text', 'label_total_spent_time'],
+      'standard#created_on' => ['date', 'field_created_on'],
+      'standard#updated_on' => ['date', 'field_updated_on'],
+      'standard#closed_on' => ['date', 'field_closed_on'],
     }.map { |field, attributes| create_field_hash(field, *attributes) }
 
     # Define custom fields with their names directly
     @custom_fields = @tracker.custom_fields.map do |cf|
-      field_identifier = "issue_custom_field_values_#{cf.id}"
+      field_identifier = "custom#issue_custom_field_values_#{cf.id}"
       field_format = cf.field_format
       field_name = cf.name
 
@@ -91,8 +91,8 @@ class PrintTemplatesController < ApplicationController
 
     # Define special fields with localization keys
     @special_fields = {
-      'issue_map' => ['image', 'field_issue_map'],
-      'issue_url' => ['qrcode', 'field_issue_url']
+      'special#issue_map' => ['image', 'field_issue_map'],
+      'special#issue_url' => ['qrcode', 'field_issue_url']
     }.map { |field, attributes| create_field_hash(field, *attributes) }
 
     # Sorting
