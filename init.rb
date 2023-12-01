@@ -18,6 +18,8 @@ Redmine::Plugin.register :redmine_print_templates do
 
   project_module :print_templates do
     permission :view_print_templates, {}, :require => :loggedin
+    permission :edit_print_templates, {}, :require => :member
+    permission :admin_print_templates, {}, :require => :member
   end
 
   menu :admin_menu, :print_templates, { controller: 'print_templates', action: 'index' },

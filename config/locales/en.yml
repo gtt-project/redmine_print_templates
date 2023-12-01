@@ -1,4 +1,9 @@
 en:
+  project_module_print_templates: "Print Templates"
+  permission_view_print_templates: "View print templates"
+  permission_edit_print_templates: "Modify print templates"
+  permission_admin_print_templates: "Manage print templates"
+
   label_print_template: "Print template"
   label_print_templates_plural: "Print templates"
   label_print_templates_new: "New print template"
