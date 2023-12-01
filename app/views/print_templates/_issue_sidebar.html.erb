@@ -29,7 +29,7 @@
           <% end %>
         </div>
       </div>
-      <iframe id="pdfme-form-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'form') %>"></iframe>
+      <iframe id="pdfme-form-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'form', issue_id: @issue.id) %>"></iframe>
     </div>
   <% else %>
     <p><%= l(:label_no_print_template_available) %>

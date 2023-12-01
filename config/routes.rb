@@ -8,13 +8,16 @@ resources :print_templates, only: %i(index new create edit update destroy) do
 end
 
 # Route to fetch fields for a tracker (AJAX)
-get 'print_templates/fields_for_tracker', to: 'print_templates#fields_for_tracker', as: :fields_for_tracker_print_templates
+get 'print_templates/fields_for_tracker', to: 'print_templates#fields_for_tracker', as: 'fields_for_tracker_print_templates'
 
 # Explicitly define the 'show' route
-get 'print_templates/show/:id', to: 'print_templates#show', as: :show_print_template, constraints: { id: /\d+/ }
+get 'print_templates/show/:id', to: 'print_templates#show', as: 'show_print_template', constraints: { id: /\d+/ }
+
+# Route to fetch fonts
+get 'print_templates/fonts/:name', to: 'print_templates_fonts#show', as: 'show_print_templates_fonts'
 
 # Route to upload fonts
-post 'print_templates/upload_font', to: 'print_templates#upload_font'
+post 'print_templates/fonts/upload', to: 'print_templates_fonts#upload', as: 'upload_print_templates_fonts'
 
 # Route to delete fonts
-delete '/print_templates/delete_font/:id', to: 'print_templates#delete_font', constraints: { id: /\d+/ }
+delete 'print_templates/fonts/delete/:id', to: 'print_templates_fonts#delete', as: 'delete_print_templates_fonts', constraints: { id: /\d+/ }

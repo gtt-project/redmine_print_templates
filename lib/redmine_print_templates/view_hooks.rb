@@ -28,13 +28,14 @@ module RedminePrintTemplates
     def view_issues_sidebar_issues_bottom(context={})
       return '' unless context[:project] && User.current.allowed_to?(:view_print_templates, context[:project])
 
+      issue = context[:issue]
       project = context[:project]
       print_templates = PrintTemplate.where(tracker_id: project.trackers.pluck(:id))
       return '' if print_templates.empty?
 
       context[:controller].send(:render_to_string, {
         partial: 'print_templates/issue_sidebar',
-        locals: { print_templates: print_templates, project: project }
+        locals: { print_templates: print_templates, project: project, issue: issue }
       })
     end
 

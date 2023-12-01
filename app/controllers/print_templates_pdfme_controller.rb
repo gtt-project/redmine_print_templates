@@ -18,9 +18,28 @@ class PrintTemplatesPdfmeController < ApplicationController
         url: show_print_templates_fonts_path(name: font.name)
       }
     end
+
+    # Pass the CSRF token to the view
+    @csrf_token = form_authenticity_token
   end
 
   def form
+    issue_id = params[:issue_id]
+    api_key = User.current.api_key
+
+    # Construct the full URL using Rails URL helpers
+    url = issue_url(issue_id, key: api_key, include: 'journals,attachments,relations', format: :json)
+    uri = URI.parse(url)
+
+    response = Net::HTTP.get_response(uri)
+
+    if response.is_a?(Net::HTTPSuccess)
+      @issue_data = response.body
+    else
+      # Handle errors (e.g., issue not found, access denied)
+      @issue_data = {}.to_json
+    end
+
     # Retrieve fonts and sort them alphabetically by name
     @fonts = Font.order(:name).map do |font|
       {
@@ -28,6 +47,9 @@ class PrintTemplatesPdfmeController < ApplicationController
         url: show_print_templates_fonts_path(name: font.name)
       }
     end
+
+    # Pass the CSRF token to the view
+    @csrf_token = form_authenticity_token
   end
 
   # Future actions for viewer, generator, etc.

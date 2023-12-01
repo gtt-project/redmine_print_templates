@@ -55,7 +55,9 @@ export function addFieldToDesigner(designer: Designer, fieldData: any) {
       y: (fieldData.y !== undefined) ? fieldData.y : defaultFieldData.y
     },
     width: (fieldData.width !== undefined) ? fieldData.width : defaultFieldData.width,
-    height: (fieldData.height !== undefined) ? fieldData.height : defaultFieldData.height
+    height: (fieldData.height !== undefined) ? fieldData.height : defaultFieldData.height,
+    alignment: fieldData.alignment || 'left',
+    verticalAlignment: fieldData.verticalAlignment || 'middle',
   };
 
   // Generate a unique key for the new schema

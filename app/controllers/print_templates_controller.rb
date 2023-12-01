@@ -60,12 +60,12 @@ class PrintTemplatesController < ApplicationController
 
     # Define core fields
     @core_fields = {
-      'author_id' => ['text', 'field_author'],
-      'status_id' => ['text', 'field_status'],
-      'priority_id' => ['text', 'field_priority'],
-      'assigned_to_id' => ['text', 'field_assigned_to'],
-      'category_id' => ['text', 'field_category'],
-      'fixed_version_id' => ['text', 'field_fixed_version'],
+      'author.name' => ['text', 'field_author'],
+      'status.name' => ['text', 'field_status'],
+      'priority.name' => ['text', 'field_priority'],
+      'assigned_to.name' => ['text', 'field_assigned_to'],
+      'category.name' => ['text', 'field_category'],
+      'fixed_version.name' => ['text', 'field_fixed_version'],
       'subject' => ['text', 'field_subject'],
       'description' => ['text', 'field_description'],
       'start_date' => ['date', 'field_start_date'],

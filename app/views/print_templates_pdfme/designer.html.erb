@@ -3,6 +3,7 @@
 <head>
   <% plugin_name = Redmine::Plugin.find(:redmine_print_templates).name rescue 'Print Templates' %>
   <title><%= "#{plugin_name} - Designer" %></title>
+  <meta name="csrf-token" content="<%= @csrf_token %>">
   <%= stylesheet_link_tag('print_pdfme', plugin: 'redmine_print_templates') %>
 </head>
 <body>

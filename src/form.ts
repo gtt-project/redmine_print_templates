@@ -9,6 +9,10 @@ interface FontData {
 }
 
 declare const embeddedFonts: FontData[];
+declare const issueData: any;
+
+const urlParams = new URLSearchParams(window.location.search);
+const issueId = urlParams.get('issue_id');
 
 document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById('pdfme-container');
@@ -24,9 +28,18 @@ document.addEventListener("DOMContentLoaded", function() {
     switch (type) {
       case 'loadSelectedTemplate':
         if (container && templateData) {
+          // Use the embedded issue data directly
+          console.log('Issue data:', issueData);
+
+          // Process issue data here and modify templateData.inputs as needed
+          // ...
+
           // Parse schemas and inputs from JSON strings to JavaScript arrays
           const schemas = JSON.parse(templateData.schemas || '[]');
           const inputs = JSON.parse(templateData.inputs || '[{}]');
+
+          console.log('Schemas:', schemas);
+          console.log('Inputs:', inputs);
 
           // Use BLANK_PDF as a fallback if basePdf is not provided
           const basePdf = templateData.basepdf || BLANK_PDF;
@@ -92,21 +105,12 @@ document.addEventListener("DOMContentLoaded", function() {
               options: { font: availableFonts },
             }).then((pdf) => {
               const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-
-              // Generate a timestamp
               const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
 
-              // Extract the issue ID from the URL
-              const urlMatch = window.parent.location.href.match(/\/issues\/(\d+)/);
-              const issueId = urlMatch ? urlMatch[1] : 'unknown';
-
-              // Construct the filename
-              const filename = `${timestamp}_issue_${issueId}.pdf`;
-
-              // Create and trigger download link
+               // Create and trigger download link
               const downloadLink = document.createElement("a");
               downloadLink.href = URL.createObjectURL(blob);
-              downloadLink.download = filename;
+              downloadLink.download = `${timestamp}_issue_${issueId}.pdf`;
               document.body.appendChild(downloadLink);
               downloadLink.click();
               document.body.removeChild(downloadLink);
