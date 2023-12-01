@@ -28,6 +28,9 @@ ja:
   label_print_template_font_name: "Font name"
   button_print_template_font_upload: "Upload font"
 
+  print_templates_settings_general_placeholder_empty: "Empty field placeholder text"
+  print_templates_settings_general_placeholder_note: "Enter text to display in empty fields, or leave this blank to keep fields empty."
+
   # javascript:
   confirm_delete_font: "Are you sure you want to delete this font?"
   error_uploading_font: "Error during font upload."

@@ -1,7 +1,13 @@
 <div class="box tabular settings">
 <h3><%= l(:general_print_templates_settings) %></h3>
 
-<p>TBD</p>
+<p>
+  <%= content_tag(:label, l(:print_templates_settings_general_placeholder_empty)) %>
+  <%= text_field_tag('settings[default_placeholder_empty]',
+      @settings['default_placeholder_empty'],
+      :size => 40) %>
+  <br><%= content_tag(:small, l(:print_templates_settings_general_placeholder_note)) %>
+</p>
 
 </div>
 

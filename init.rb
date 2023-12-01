@@ -12,7 +12,9 @@ Redmine::Plugin.register :redmine_print_templates do
   requires_redmine :version_or_higher => '5.0.0'
 
   settings(
-    default: {},
+    default: {
+      'default_placeholder_empty' => '',
+    },
     partial: 'print_templates/settings'
   )
 
