@@ -31,6 +31,11 @@ en:
   print_templates_settings_general_placeholder_empty: "Empty field placeholder text"
   print_templates_settings_general_placeholder_note: "Enter text to display in empty fields, or leave this blank to keep fields empty."
 
+  pdf_properties_print_templates_settings: "PDF Properties"
+  print_templates_settings_general_pdf_author: "Author"
+  print_templates_settings_general_pdf_creator: "Creator"
+  print_templates_settings_general_pdf_producer: "Producer"
+
   # javascript:
   confirm_delete_font: "Are you sure you want to delete this font?"
   error_uploading_font: "Error during font upload."

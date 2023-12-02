@@ -5,8 +5,34 @@
   <%= content_tag(:label, l(:print_templates_settings_general_placeholder_empty)) %>
   <%= text_field_tag('settings[default_placeholder_empty]',
       @settings['default_placeholder_empty'],
-      :size => 40) %>
+      :size => 50) %>
   <br><%= content_tag(:small, l(:print_templates_settings_general_placeholder_note)) %>
+</p>
+
+</div>
+
+<div class="box tabular settings">
+<h3><%= l(:pdf_properties_print_templates_settings) %></h3>
+
+<p>
+  <%= content_tag(:label, l(:print_templates_settings_general_pdf_author)) %>
+  <%= text_field_tag('settings[default_pdf_author]',
+      @settings['default_pdf_author'],
+      :size => 50) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:print_templates_settings_general_pdf_producer)) %>
+  <%= text_field_tag('settings[default_pdf_producer]',
+      @settings['default_pdf_producer'],
+      :size => 50) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:print_templates_settings_general_pdf_creator)) %>
+  <%= text_field_tag('settings[default_pdf_creator]',
+      @settings['default_pdf_creator'],
+      :size => 50, :readonly => true) %>
 </p>
 
 </div>
@@ -16,7 +42,7 @@
 
 <p>
   <label for="font_name"><%= l(:label_print_template_font_name) %></label>
-  <input type="text" id="font_name" size="40">
+  <input type="text" id="font_name" size="50">
 </p>
 <p>
   <label for="font_file"><%= l(:label_print_template_font_file) %></label>

@@ -48,6 +48,9 @@ class PrintTemplatesPdfmeController < ApplicationController
       }
     end
 
+    # Retrieve plugin settings
+    @plugin_settings = Setting.plugin_redmine_print_templates
+
     # Pass the CSRF token to the view
     @csrf_token = form_authenticity_token
   end

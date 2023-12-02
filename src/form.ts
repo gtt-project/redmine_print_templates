@@ -1,4 +1,4 @@
-import { Template, BLANK_PDF, getDefaultFont } from '@pdfme/common';
+import { Template, GeneratorOptions, BLANK_PDF, getDefaultFont } from '@pdfme/common';
 import { Form } from '@pdfme/ui';
 import { text, image, barcodes } from "@pdfme/schemas";
 import { generate } from '@pdfme/generator';
@@ -10,6 +10,7 @@ interface FontData {
 
 declare const embeddedFonts: FontData[];
 declare const issueData: any;
+declare const pluginSettings: any;
 
 const urlParams = new URLSearchParams(window.location.search);
 const issueId = urlParams.get('issue_id');
@@ -97,7 +98,16 @@ document.addEventListener("DOMContentLoaded", function() {
               template: form.getTemplate(),
               inputs: currentInputs,
               plugins: { text, image, qrcode: barcodes.qrcode },
-              options: { font: availableFonts },
+              options: {
+                font: availableFonts,
+                author: pluginSettings.default_pdf_author || "",
+                creator: pluginSettings.default_pdf_creator || "",
+                keywords: [],
+                language: "en-US",
+                producer: pluginSettings.default_pdf_producer || "",
+                subject: "Redmine Issue Report",
+                title: `Issue #${issueId}: Feature Implementation`,
+              },
             }).then((pdf) => {
               const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
               const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
