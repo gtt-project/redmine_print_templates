@@ -1,6 +1,6 @@
 import { Designer } from '@pdfme/ui';
 import { openDesigner, downloadTemplate, uploadTemplate } from './helper';
-import { addFieldToDesigner } from './schemas';
+import { addField } from './schemas';
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
         break;
       case 'addField':
         if (designer) {
-          addFieldToDesigner(designer, data);
+          addField(designer, data);
         }
         break;
       case 'downloadTemplate':

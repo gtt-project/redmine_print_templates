@@ -8,6 +8,7 @@ declare const embeddedFonts: any[];
 
 const defaultTemplate: Template = {
   basePdf: { width: 210, height: 297, padding: [0, 0, 0, 0] },
+  sampledata: [],
   schemas: [{} as Record<string, any>],
   pdfmeVersion: '1.0.0'
 };
@@ -25,6 +26,7 @@ function isValidValue<T>(value: T | null | undefined | ''): value is T {
 export function createTemplate(template: Partial<Template> = {}): Template {
   const finalTemplate: Template = {
     basePdf: isValidValue(template.basePdf) ? template.basePdf : defaultTemplate.basePdf,
+    sampledata: isValidValue(template.sampledata) ? template.sampledata : defaultTemplate.sampledata,
     schemas: isValidValue(template.schemas) ? template.schemas : defaultTemplate.schemas,
     pdfmeVersion: isValidValue(template.pdfmeVersion) ? template.pdfmeVersion : defaultTemplate.pdfmeVersion
   };
