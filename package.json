@@ -1,6 +1,6 @@
 {
   "name": "redmine_print_templates",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Plugin that enables printing templates with pdfme in Redmine",
   "main": "index.js",
   "type": "module",
@@ -27,10 +27,10 @@
     "@pdfme/generator": "4.0.2",
     "@pdfme/schemas": "4.0.2",
     "@pdfme/ui": "4.0.2",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "signature_pad": "^5.0.2",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "uuid": "^10.0.0",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
