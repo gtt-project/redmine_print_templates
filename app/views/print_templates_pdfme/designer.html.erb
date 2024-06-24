@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="pdfme-container">
-    <div id="pdfme-loading">Reload page to start PDFme Designer...</div>
+    <div id="pdfme-loading"><%= l(:reload_page_for_designer) %></div>
   </div>
   <%= javascript_include_tag 'pdfme-designer', plugin: :redmine_print_templates %>
   <script type="text/javascript">

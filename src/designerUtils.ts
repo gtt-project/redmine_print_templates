@@ -16,7 +16,7 @@ export function initializeOrUpdateDesigner(designer: Designer | undefined, conta
   if (!designer && container) {
     designer = new Designer({
       domContainer: container,
-      template: template,
+      template: template as Template | any,
       plugins: { text, image, qrcode: barcodes.qrcode },
     });
 

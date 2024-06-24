@@ -9,7 +9,7 @@
 
   <p>
     <%= content_tag(:label, l(:label_print_template_basepdf), for: 'pdf-upload') %>
-    <input type="file" onchange="encodeBasePDF(this)" accept="application/pdf" id="pdf-upload" />
+    <input type="file" accept="application/pdf" id="pdf-upload" />
     <span id="basepdf-ok-icon" class="icon-only icon-ok" style="<%= 'display: none;' unless @print_template.basepdf.present? %>"></span>
     <%= link_to l(:link_print_template_basepdf_reset), '#', id: 'use-blank-pdf', style: ('display: none;' unless @print_template.basepdf.present?) %>
   </p>

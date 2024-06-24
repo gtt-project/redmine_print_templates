@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Recreate the Form instance with the new template and inputs
             form = new Form({
               domContainer: container,
-              template: template,
+              template: template as Template | any,
               inputs: inputs,
               plugins: { text, image, qrcode: barcodes.qrcode },
               options: {
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             generate({
-              template: form.getTemplate(),
+              template: form.getTemplate() as Template | any,
               inputs: currentInputs,
               plugins: { text, image, qrcode: barcodes.qrcode },
               options: {

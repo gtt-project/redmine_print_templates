@@ -7,7 +7,9 @@
   <%= stylesheet_link_tag('print_pdfme', plugin: 'redmine_print_templates') %>
 </head>
 <body>
-  <div id="pdfme-container"><div id="pdfme-loading">Reload page to start PDFme Form...</div></div>
+  <div id="pdfme-container">
+    <div id="pdfme-loading"><%= l(:reload_page_for_designer) %></div>
+  </div>
   <%= javascript_include_tag 'pdfme-form', plugin: :redmine_print_templates %>
   <script type="text/javascript">
     var issueData = <%= raw @issue_data %>;
