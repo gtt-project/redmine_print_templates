@@ -1,8 +1,9 @@
 import { Template, BLANK_PDF, getDefaultFont } from '@pdfme/common';
 import { Designer } from '@pdfme/ui';
-import { text, image, barcodes } from "@pdfme/schemas";
-import { initializeOrUpdateDesigner, addFieldToDesigner, downloadTemplate, loadTemplate } from './designerUtils';
+
+import { initializeOrUpdateDesigner, downloadTemplate, loadTemplate } from './helper';
 import { validateLocale, SupportedLocale } from './locales';
+import { addFieldToDesigner, getPlugins } from './schemas';
 
 interface FontData {
   name: string;
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
       designer = new Designer({
         domContainer: container,
         template: { basePdf: BLANK_PDF, schemas: [], sampledata: [{}] },
-        plugins: { text, image, qrcode: barcodes.qrcode },
+        plugins: getPlugins(),
         options: {
           lang: validatedLocale,
           theme: {

@@ -7,7 +7,7 @@ Redmine::Plugin.register :redmine_print_templates do
   author_url 'https://github.com/georepublic'
   url 'https://github.com/gtt-project/redmine_print_templates'
   description 'Enables printing templates with PDFme in Redmine deployments'
-  version '0.2.0'
+  version '0.3.0'
 
   requires_redmine :version_or_higher => '5.0.0'
 

@@ -1,41 +1,44 @@
-import { Template, BLANK_PDF } from '@pdfme/common';
 import { Designer } from '@pdfme/ui';
-import { text, image, barcodes } from "@pdfme/schemas";
+import {
+  text,
+  readOnlyText,
+  barcodes,
+  image,
+  readOnlyImage,
+  svg,
+  readOnlySvg,
+  line,
+  tableBeta,
+  rectangle,
+  ellipse,
+} from '@pdfme/schemas';
 import { v4 as uuidv4 } from 'uuid';
-
 import { mapIconDataUrl } from './mapIconDataUrl';
+import plugins from './plugins';
+
 type FieldType = 'text' | 'image' | 'qrcode';
 
-export function initializeOrUpdateDesigner(designer: Designer | undefined, container: HTMLElement | null, basePdf: string, schemas: any[], inputs: any[]): Designer | undefined {
-  const template: Template = {
-    basePdf: basePdf || BLANK_PDF,
-    schemas: schemas || [],
-    sampledata: inputs || [{}],
+/**
+ * Get the plugins object
+ * @returns {Object} - Returns the plugins object
+ */
+export const getPlugins = () => {
+  return {
+    Text: text,
+    ReadOnlyText: readOnlyText,
+    Table: tableBeta,
+    Line: line,
+    Rectangle: rectangle,
+    Ellipse: ellipse,
+    Image: image,
+    ReadOnlyImage: readOnlyImage,
+    SVG: svg,
+    ReadOnlySvg: readOnlySvg,
+    QR: barcodes.qrcode,
+    Code128: barcodes.code128,
+    Signature: plugins.signature,
   };
-
-  if (!designer && container) {
-    designer = new Designer({
-      domContainer: container,
-      template: template as Template | any,
-      plugins: { text, image, qrcode: barcodes.qrcode },
-    });
-
-    designer.onChangeTemplate((updatedTemplate) => {
-      window.parent.postMessage({
-        type: 'updateData',
-        data: {
-          schemas: updatedTemplate.schemas,
-          inputs: updatedTemplate.sampledata || [{}]
-        }
-      }, window.location.origin);
-    });
-  } else {
-    designer?.updateTemplate(template);
-  }
-
-  // Return the Designer instance
-  return designer;
-}
+};
 
 export function addFieldToDesigner(designer: Designer, fieldData: any) {
   // Fetch the current template state
@@ -102,33 +105,4 @@ function getDefaultFieldData(type: FieldType) {
   };
 
   return defaults[type] || defaults['text'];
-}
-
-export function downloadTemplate(designer: Designer, trackerName: string) {
-  if (designer) {
-    const templateData = designer.getTemplate();
-    if (templateData) {
-      // Format the filename with the tracker name
-      const fileName = `template_${trackerName.toLowerCase().replace(/\s+/g, '_')}`;
-      downloadJsonFile(templateData, fileName);
-    }
-  }
-}
-
-export function downloadJsonFile(data: any, fileName: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${fileName}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-export function loadTemplate(designer: Designer, templateData: Template) {
-  if (designer) {
-    designer.updateTemplate(templateData);
-  }
 }

@@ -1,7 +1,8 @@
-import { Template, GeneratorOptions, BLANK_PDF, getDefaultFont } from '@pdfme/common';
+import { Template, BLANK_PDF, getDefaultFont } from '@pdfme/common';
 import { Form } from '@pdfme/ui';
-import { text, image, barcodes } from "@pdfme/schemas";
 import { generate } from '@pdfme/generator';
+
+import { getPlugins } from './schemas';
 
 interface FontData {
   name: string;
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
               domContainer: container,
               template: template as Template | any,
               inputs: inputs,
-              plugins: { text, image, qrcode: barcodes.qrcode },
+              plugins: getPlugins(),
               options: {
                 theme: {
                   token: {
@@ -97,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
             generate({
               template: form.getTemplate() as Template | any,
               inputs: currentInputs,
-              plugins: { text, image, qrcode: barcodes.qrcode },
+              plugins: getPlugins(),
               options: {
                 font: availableFonts,
                 author: pluginSettings.default_pdf_author || "",
