@@ -42,11 +42,8 @@ export const getPlugins = () => {
 
 export function addField(designer: Designer, fieldData: any) {
 
-  console.log('addField', fieldData);
-
   // Fetch the current template state
   const currentTemplate = designer.getTemplate();
-  console.log('currentTemplate', currentTemplate);
 
   // Create a deep clone of the current schemas and sampledata to avoid direct mutation
   const updatedSchemas = JSON.parse(JSON.stringify(currentTemplate.schemas));
