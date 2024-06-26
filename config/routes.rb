@@ -4,7 +4,7 @@
 resources :print_templates, only: %i(index new create edit update destroy) do
   # Nested routes for PDFme functionalities
   get 'designer', to: 'print_templates_pdfme#designer', on: :collection
-  get 'form', to: 'print_templates_pdfme#form', on: :collection
+  get 'viewer', to: 'print_templates_pdfme#viewer', on: :collection
 end
 
 # Route to fetch fields for a tracker (AJAX)

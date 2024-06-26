@@ -1,9 +1,14 @@
 {
-  "basePdf": "data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PAovRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDM4Cj4+CnN0cmVhbQp4nCvkMlAwUDC1NNUzMVGwMDHUszRSKErlCtfiyuMK5AIAXQ8GCgplbmRzdHJlYW0KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL01lZGlhQm94IFswIDAgNTk1LjQ0IDg0MS45Ml0KL1Jlc291cmNlcyA8PAo+PgovQ29udGVudHMgNSAwIFIKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0tpZHMgWzQgMCBSXQovQ291bnQgMQo+PgplbmRvYmoKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL3RyYXBwZWQgKGZhbHNlKQovQ3JlYXRvciAoU2VyaWYgQWZmaW5pdHkgRGVzaWduZXIgMS4xMC40KQovVGl0bGUgKFVudGl0bGVkLnBkZikKL0NyZWF0aW9uRGF0ZSAoRDoyMDIyMDEwNjE0MDg1OCswOScwMCcpCi9Qcm9kdWNlciAoaUxvdmVQREYpCi9Nb2REYXRlIChEOjIwMjIwMTA2MDUwOTA5WikKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAxIDAgUgovSW5mbyAzIDAgUgovSUQgWzwyODhCM0VENTAyOEU0MDcyNERBNzNCOUE0Nzk4OUEwQT4gPEY1RkJGNjg4NkVERDZBQUNBNDRCNEZDRjBBRDUxRDlDPl0KL1R5cGUgL1hSZWYKL1cgWzEgMiAyXQovRmlsdGVyIC9GbGF0ZURlY29kZQovSW5kZXggWzAgN10KL0xlbmd0aCAzNgo+PgpzdHJlYW0KeJxjYGD4/5+RUZmBgZHhFZBgDAGxakAEP5BgEmFgAABlRwQJCmVuZHN0cmVhbQplbmRvYmoKc3RhcnR4cmVmCjUzMgolJUVPRgo=",
+  "basePdf": {
+    "width": 210,
+    "height": 297,
+    "padding": [0, 0, 0, 0]
+  },
   "schemas": [
     {
-      "$(standard#author.name)#1e69": {
-        "type": "text",
+      "author.name": {
+        "type": "extendedText",
+        "content": "Author",
         "position": {
           "x": 73.25,
           "y": 45.77
@@ -14,8 +19,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#status.name)#a1a2": {
-        "type": "text",
+      "status.name": {
+        "type": "extendedText",
+        "content": "Status",
         "position": {
           "x": 73.25,
           "y": 58.11
@@ -26,8 +32,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#priority.name)#075f": {
-        "type": "text",
+      "priority.name": {
+        "type": "extendedText",
+        "content": "Priority",
         "position": {
           "x": 73.25,
           "y": 70.45
@@ -38,8 +45,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#assigned_to.name)#5b13": {
-        "type": "text",
+      "assigned_to.name": {
+        "type": "extendedText",
+        "content": "Assigned to",
         "position": {
           "x": 73.25,
           "y": 82.78
@@ -50,8 +58,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#category.name)#4bf9": {
-        "type": "text",
+      "category.name": {
+        "type": "extendedText",
+        "content": "Category",
         "position": {
           "x": 73.25,
           "y": 95.12
@@ -62,8 +71,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#fixed_version.name)#0a2d": {
-        "type": "text",
+      "fixed_version.name": {
+        "type": "extendedText",
+        "content": "Fixed version",
         "position": {
           "x": 73.25,
           "y": 107.46
@@ -74,8 +84,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#subject)#e114": {
-        "type": "text",
+      "subject": {
+        "type": "extendedText",
+        "content": "Subject",
         "position": {
           "x": 73.25,
           "y": 119.79
@@ -86,8 +97,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#start_date)#800c": {
-        "type": "text",
+      "start_date": {
+        "type": "extendedText",
+        "content": "Start date",
         "position": {
           "x": 73.25,
           "y": 132.13
@@ -98,8 +110,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#due_date)#ecc1": {
-        "type": "text",
+      "due_date": {
+        "type": "extendedText",
+        "content": "Due date",
         "position": {
           "x": 73.25,
           "y": 144.47
@@ -110,8 +123,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#done_ratio)#ab49": {
-        "type": "text",
+      "done_ratio": {
+        "type": "extendedText",
+        "content": "Done ratio",
         "position": {
           "x": 73.25,
           "y": 156.81
@@ -122,8 +136,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#estimated_hours)#e114": {
-        "type": "text",
+      "estimated_hours": {
+        "type": "extendedText",
+        "content": "Estimated hours",
         "position": {
           "x": 73.25,
           "y": 169.15
@@ -134,8 +149,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#total_estimated_hours)#a814": {
-        "type": "text",
+      "total_estimated_hours": {
+        "type": "extendedText",
+        "content": "Total estimated hours",
         "position": {
           "x": 73.25,
           "y": 181.48
@@ -146,8 +162,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#spent_hours)#4995": {
-        "type": "text",
+      "spent_hours": {
+        "type": "extendedText",
+        "content": "Spent hours",
         "position": {
           "x": 73.25,
           "y": 193.82
@@ -158,8 +175,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#total_spent_hours)#32c2": {
-        "type": "text",
+      "total_spent_hours": {
+        "type": "extendedText",
+        "content": "Total spent hours",
         "position": {
           "x": 73.25,
           "y": 206.16
@@ -170,8 +188,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#created_on)#83d2": {
-        "type": "text",
+      "created_on": {
+        "type": "extendedText",
+        "content": "Created on",
         "position": {
           "x": 73.25,
           "y": 218.5
@@ -182,8 +201,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#updated_on)#ca96": {
-        "type": "text",
+      "updated_on": {
+        "type": "extendedText",
+        "content": "Updated on",
         "position": {
           "x": 73.25,
           "y": 230.83
@@ -194,8 +214,9 @@
         "verticalAlignment": "middle",
         "fontName": "Roboto"
       },
-      "$(standard#closed_on)#0b1a": {
-        "type": "text",
+      "closed_on": {
+        "type": "extendedText",
+        "content": "Closed on",
         "position": {
           "x": 73.25,
           "y": 243.17
@@ -208,8 +229,9 @@
       }
     },
     {
-      "$(standard#description)#62b3": {
-        "type": "text",
+      "description": {
+        "type": "extendedText",
+        "content": "Description",
         "position": {
           "x": 74.51,
           "y": 30.06
@@ -223,53 +245,6 @@
     },
     {},
     {},
-    {
-      "$(special#issue_url)#dc83": {
-        "type": "qrcode",
-        "position": {
-          "x": 153.75,
-          "y": 35.86
-        },
-        "width": 30,
-        "height": 30,
-        "alignment": "left",
-        "verticalAlignment": "middle"
-      },
-      "$(special#issue_map)#1722": {
-        "type": "image",
-        "position": {
-          "x": 25.75,
-          "y": 70.99
-        },
-        "width": 158,
-        "height": 100,
-        "alignment": "left",
-        "verticalAlignment": "middle"
-      }
-    }
-  ],
-  "sampledata": [
-    {
-      "$(standard#assigned_to.name)#5b13": "$(standard#assigned_to.name)",
-      "$(standard#author.name)#1e69": "$(standard#author.name)",
-      "$(standard#category.name)#4bf9": "$(standard#category.name)",
-      "$(standard#closed_on)#0b1a": "$(standard#closed_on)",
-      "$(standard#created_on)#83d2": "$(standard#created_on)",
-      "$(standard#description)#62b3": "$(standard#description)",
-      "$(standard#done_ratio)#ab49": "$(standard#done_ratio)",
-      "$(standard#due_date)#ecc1": "$(standard#due_date)",
-      "$(standard#estimated_hours)#e114": "$(standard#estimated_hours)",
-      "$(standard#fixed_version.name)#0a2d": "$(standard#fixed_version.name)",
-      "$(standard#priority.name)#075f": "$(standard#priority.name)",
-      "$(standard#spent_hours)#4995": "$(standard#spent_hours)",
-      "$(standard#start_date)#800c": "$(standard#start_date)",
-      "$(standard#status.name)#a1a2": "$(standard#status.name)",
-      "$(standard#subject)#e114": "$(standard#subject)",
-      "$(standard#total_estimated_hours)#a814": "$(standard#total_estimated_hours)",
-      "$(standard#total_spent_hours)#32c2": "$(standard#total_spent_hours)",
-      "$(standard#updated_on)#ca96": "$(standard#updated_on)",
-      "$(special#issue_map)#1722": "",
-      "$(special#issue_url)#dc83": "localhost:3000"
-    }
+    {}
   ]
 }

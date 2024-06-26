@@ -1,14 +1,11 @@
 class PrintTemplatesController < ApplicationController
-  layout ->{ @project ? 'base' : 'admin' }
+  layout -> { @project ? 'base' : 'admin' }
 
   self.main_menu = false
 
   before_action :set_trackers, only: [:new, :create, :edit, :update]
-  before_action :find_print_template, only: [:edit, :update, :destroy]
+  before_action :find_print_template, only: [:edit, :update, :destroy, :show]
   before_action :require_admin, except: [:show, :fields_for_tracker]
-
-  # TODO: make this work with Rails.ajax
-  # before_action :authorize_view_print_templates, only: [:show, :fields_for_tracker]
 
   def index
     @print_templates = PrintTemplate.includes(:tracker).all.order(name: :asc)
@@ -28,7 +25,6 @@ class PrintTemplatesController < ApplicationController
   end
 
   def edit
-    # @print_template is set by before_action
   end
 
   def update
@@ -48,17 +44,43 @@ class PrintTemplatesController < ApplicationController
   end
 
   def show
-    @print_template = PrintTemplate.find(params[:id])
+    # Define the keys that need to be parsed as JSON
+    json_keys = ['schemas']
+
+    # Parse specified JSON strings to nested JSON
+    parsed_json = @print_template.attributes.each_with_object({}) do |(key, value), hash|
+      hash[key] = if json_keys.include?(key) && value.is_a?(String)
+                    begin
+                      JSON.parse(value)
+                    rescue JSON::ParserError
+                      value
+                    end
+                  else
+                    value
+                  end
+    end
+
+    fields_data = generate_fields_data(@print_template.tracker)
+
+    # Merge fields data into parsed_json
+    merged_json = parsed_json.merge(fields_data)
+
     respond_to do |format|
-      format.json { render json: @print_template }
-      format.js
+      format.json { render json: merged_json }
     end
   end
 
   def fields_for_tracker
-    @tracker = Tracker.find(params[:tracker_id])
+    tracker = Tracker.find(params[:tracker_id])
+    fields_data = generate_fields_data(tracker)
+    render json: fields_data
+  end
 
-    @core_fields = {
+  private
+
+  def generate_fields_data(tracker)
+    # Define the fields that are available for the print template
+    core_fields = {
       'author.name' => ['string', l(:field_author)],
       'status.name' => ['string', l(:field_status)],
       'priority.name' => ['string', l(:field_priority)],
@@ -79,7 +101,8 @@ class PrintTemplatesController < ApplicationController
       'closed_on' => ['date', l(:field_closed_on)],
     }.map { |field, attributes| create_field_hash(field, *attributes) }
 
-    @custom_fields = @tracker.custom_fields.map do |cf|
+    # Custom fields
+    custom_fields = tracker.custom_fields.map do |cf|
       field_key = "cf_#{cf.id}"
       field_format = cf.field_format
       field_label = cf.name
@@ -87,30 +110,50 @@ class PrintTemplatesController < ApplicationController
       create_field_hash(field_key, field_format, field_label)
     end
 
-    @special_fields = {
+    # Special fields
+    special_fields = {
       'issue_map' => ['map', l(:field_issue_map)],
       'issue_url' => ['link', l(:field_issue_url)],
     }.map { |field, attributes| create_field_hash(field, *attributes) }
 
-    @core_fields.sort_by! { |field| field[:key].downcase }
-    @custom_fields.sort_by! { |field| field[:key].downcase }
-    @special_fields.sort_by! { |field| field[:key].downcase }
+    # Field formats
+    format_list = {
+      'bool' => ['boolean', 'Boolean'],
+      'date' => ['date', 'Date'],
+      # 'attachment' => ['file', 'File'],
+      'float' => ['float', 'Float'],
+      'int' => ['integer', 'Integer'],
+      # 'enumeration' => ['enumeration', 'Key/value list'],
+      # 'link' => ['link', 'Link'],
+      # 'list' => ['list', 'List'],
+      # 'text' => ['text', 'Long text'],
+      'string' => ['string', 'Text'],
+      # 'user' => ['user', 'User'],
+      # 'version' => ['version', 'Version'],
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
 
-    render json: {
-      coreFields: @core_fields,
-      customFields: @custom_fields,
-      specialFields: @special_fields
+    # Return the fields data
+    {
+      'fieldKeyOptions': [{
+        'label': l(:label_core_fields),
+        'options': core_fields.sort_by! { |field| field[:value].downcase }
+      }, {
+        'label': l(:label_custom_fields),
+        'options': custom_fields.sort_by! { |field| field[:value].downcase }
+      }, {
+        'label': l(:label_special_fields),
+        'options': special_fields.sort_by! { |field| field[:value].downcase }
+      }],
+      'fieldFormatOptions': format_list
     }
   end
-
-  private
 
   def create_field_hash(field, format, name_or_key)
     name = I18n.exists?(name_or_key) ? I18n.t(name_or_key) : name_or_key
 
     {
       label: name,
-      key: field,
+      value: field,
       format: format
     }
   end
@@ -124,7 +167,7 @@ class PrintTemplatesController < ApplicationController
   end
 
   def print_template_params
-    params.require(:print_template).permit(:name, :schemas, :inputs, :basepdf, :tracker_id)
+    params.require(:print_template).permit(:name, :schemas, :basepdf, :tracker_id)
   end
 
   def require_admin

@@ -1,216 +1,163 @@
-document.addEventListener("DOMContentLoaded", function() {
-  const basepdfField = document.getElementById('print_template_basepdf');
-  const schemasField = document.getElementById('print_template_schemas');
-  const inputsField = document.getElementById('print_template_inputs');
-  const trackerIdSelect = document.getElementById('print_template_tracker_id');
-  const openBtn = document.getElementById('open-designer-fullscreen-btn');
-  const closeBtn = document.getElementById('close-designer-fullscreen-btn');
-  const designerOverlay = document.getElementById('designer-fullscreen');
-  const iframe = document.getElementById('pdfme-designer-iframe');
-  const uploadField = document.getElementById('pdf-upload');
-  const useBlankPdfLink = document.getElementById('use-blank-pdf');
-  const templateDownloadBtn = document.getElementById('template_download-designer-fullscreen-btn');
-  const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
-  const templateFileInput = document.getElementById('template-file-input');
+document.addEventListener("DOMContentLoaded", () => {
+  const elements = {
+    basepdfField: document.getElementById('print_template_basepdf'),
+    schemasField: document.getElementById('print_template_schemas'),
+    trackerIdSelect: document.getElementById('print_template_tracker_id'),
+    openBtn: document.getElementById('open-designer-fullscreen-btn'),
+    closeBtn: document.getElementById('close-designer-fullscreen-btn'),
+    designerOverlay: document.getElementById('designer-fullscreen'),
+    iframe: document.getElementById('pdfme-designer-iframe'),
+    uploadField: document.getElementById('pdf-upload'),
+    useBlankPdfLink: document.getElementById('use-blank-pdf'),
+    templateDownloadBtn: document.getElementById('template_download-designer-fullscreen-btn'),
+    templateUploadBtn: document.getElementById('template_upload-designer-fullscreen-btn'),
+    templateFileInput: document.getElementById('template-file-input'),
+    basepdfIcon: document.getElementById('basepdf-ok-icon')
+  };
 
-  // Function to update fields dropdown
-  function loadTrackerData() {
-    if (trackerIdSelect) {
+  console.log('Print Templates Designer loaded!');
+
+  const showError = (message) => {
+    console.error(message);
+    alert('An error occurred. Please try again.');
+  };
+
+  const loadTrackerData = () => {
+    if (elements.trackerIdSelect) {
       Rails.ajax({
-        url: trackerIdSelect.getAttribute('data-url') + "?tracker_id=" + trackerIdSelect.value,
+        url: `${elements.trackerIdSelect.getAttribute('data-url')}?tracker_id=${elements.trackerIdSelect.value}`,
         type: 'GET',
         dataType: 'json',
-        success: function(response) {
-          const coreFields = response.coreFields;
-          const customFields = response.customFields;
-          const specialFields = response.specialFields;
-
-          const fieldKeyOptions = createFieldKeyOptions(coreFields, customFields, specialFields);
-          sessionStorage.setItem('fieldKeyOptions', JSON.stringify(fieldKeyOptions));
+        success: (response) => {
+          sessionStorage.setItem('fieldKeyOptions', JSON.stringify(response.fieldKeyOptions));
+          sessionStorage.setItem('fieldFormatOptions', JSON.stringify(response.fieldFormatOptions));
         }
       });
     }
-  }
+  };
 
-  // Event listener for tracker dropdown change
-  if (trackerIdSelect) {
-    trackerIdSelect.addEventListener('change', function() {
-      loadTrackerData();
-    });
+  const handleTemplateDownloadClick = () => {
+    const iframeWindow = elements.iframe.contentWindow;
+    const trackerName = elements.trackerIdSelect.options[elements.trackerIdSelect.selectedIndex].text;
 
-    // Trigger the loadTrackerData request on page load
-    loadTrackerData();
-  }
+    iframeWindow.postMessage({
+      type: 'downloadTemplate',
+      data: { trackerName: trackerName }
+    }, window.location.origin);
+  };
 
-  // Function to create fieldKeyOptions from tracker data
-  function createFieldKeyOptions(coreFields, customFields, specialFields) {
-    return [
-      {
-        label: 'Core Fields',
-        options: coreFields.map(field => ({ label: field.label, value: field.key })),
-      },
-      {
-        label: 'Custom Fields',
-        options: customFields.map(field => ({ label: field.label, value: field.key })),
-      },
-      {
-        label: 'Special Fields',
-        options: specialFields.map(field => ({ label: field.label, value: field.key })),
-      },
-    ];
-  }
+  const handleTemplateUploadClick = () => {
+    elements.templateFileInput.click();
+  };
 
-  if (templateDownloadBtn) {
-    templateDownloadBtn.addEventListener('click', function() {
-      const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
-      const trackerSelect = document.getElementById('print_template_tracker_id');
-      const trackerName = trackerSelect.options[trackerSelect.selectedIndex].text;
+  const handleTemplateFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "application/json") {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const templateData = JSON.parse(e.target.result);
 
-      iframeWindow.postMessage({
-        type: 'downloadTemplate',
-        data: { trackerName: trackerName }  // Enclose trackerName within a data object
-      }, window.location.origin);
-    });
-  }
-
-  if (templateUploadBtn && templateFileInput) {
-    templateUploadBtn.addEventListener('click', function() {
-      // Trigger the hidden file input when the button is clicked
-      document.getElementById('template-file-input').click();
-    });
-
-    templateFileInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file && file.type === "application/json") {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          try {
-            const templateData = JSON.parse(e.target.result);
-
-            if (templateData.basePdf) {
-              basepdfField.value = templateData.basePdf;
-            } else {
-              basepdfField.value = ''; // Reset if 'basePdf' is not provided
-            }
-
-            // Toggle visibility of basepdf controls
-            toggleBasePDFControls();
-
-            // Post the remaining data to the iframe
-            const iframeWindow = document.getElementById('pdfme-designer-iframe').contentWindow;
-            iframeWindow.postMessage({
-              type: 'uploadTemplate',
-              data: { templateData: templateData }
-            }, window.location.origin);
-          } catch (error) {
-            console.error('Failed to parse template file:', error);
-            alert('Invalid JSON template file.');
+          if (templateData.basePdf) {
+            elements.basepdfField.value = templateData.basePdf;
+          } else {
+            elements.basepdfField.value = ''; // Reset if 'basePdf' is not provided
           }
-        };
-        reader.readAsText(file);
-      } else {
-        alert('Please upload a valid JSON template file.');
-      }
-    });
-  }
 
-  // Function to encode a PDF file in base64
-  function encodeBasePDF(input) {
+          toggleBasePDFControls();
+
+          const iframeWindow = elements.iframe.contentWindow;
+          iframeWindow.postMessage({
+            type: 'uploadTemplate',
+            data: { templateData: templateData }
+          }, window.location.origin);
+        } catch (error) {
+          showError('Failed to parse template file: ' + error);
+        }
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Please upload a valid JSON template file.');
+    }
+  };
+
+  const encodeBasePDF = (input) => {
     if (input.files && input.files[0]) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = (e) => {
         const encodedPDF = e.target.result;
-        if (basepdfField) {
-          basepdfField.value = encodedPDF;
+        if (elements.basepdfField) {
+          elements.basepdfField.value = encodedPDF;
         }
         toggleBasePDFControls();
       };
       reader.readAsDataURL(input.files[0]);
     }
-  }
+  };
 
-  // Function to toggle the visibility of the basepdf controls
-  function toggleBasePDFControls() {
-    const basepdfIcon = document.getElementById('basepdf-ok-icon');
-
-    if (basepdfField && basepdfField.value) {
-      basepdfIcon.style.display = 'inline';
-      useBlankPdfLink.style.display = 'inline';
+  const toggleBasePDFControls = () => {
+    if (elements.basepdfField && elements.basepdfField.value) {
+      elements.basepdfIcon.style.display = 'inline';
+      elements.useBlankPdfLink.style.display = 'inline';
     } else {
-      basepdfIcon.style.display = 'none';
-      useBlankPdfLink.style.display = 'none';
+      elements.basepdfIcon.style.display = 'none';
+      elements.useBlankPdfLink.style.display = 'none';
     }
-  }
+  };
 
-  // Event listener for file upload
-  if (uploadField) {
-    uploadField.addEventListener('change', function() {
-      encodeBasePDF(this);
-    });
-  }
+  const handleOpenBtnClick = () => {
+    elements.designerOverlay.style.display = 'block';
+    const iframeWindow = elements.iframe.contentWindow;
 
-  // Event listener for resetting the PDF
-  if (useBlankPdfLink) {
-    useBlankPdfLink.addEventListener('click', function(event) {
-      event.preventDefault();
-      if (basepdfField) {
-        basepdfField.value = '';
-        uploadField.value = '';
-        toggleBasePDFControls();
-      }
-    });
-  }
+    const data = {};
+    elements.basepdfField.value ? data.basePdf = elements.basepdfField.value : null;
+    elements.schemasField.value ? data.schemas = JSON.parse(elements.schemasField.value) : null;
 
-  // Event listeners for iframe communication
-  if (basepdfField && schemasField && inputsField && openBtn && closeBtn && designerOverlay && iframe) {
-    openBtn.addEventListener('click', function() {
-      designerOverlay.style.display = 'block';
-      const iframeWindow = iframe.contentWindow;
+    data.fieldKeyOptions = JSON.parse(sessionStorage.getItem('fieldKeyOptions'));
+    data.fieldFormatOptions = JSON.parse(sessionStorage.getItem('fieldFormatOptions'));
 
-      const data = {};
-      basepdfField.value ? data.basePdf = basepdfField.value : null;
-      schemasField.value ? data.schemas = JSON.parse(schemasField.value) : null;
-      inputsField.value  ? data.inputs  = JSON.parse(inputsField.value) : null;
+    iframeWindow.postMessage({
+      type: 'openDesigner',
+      data: data
+    }, window.location.origin);
+  };
 
-      data.fieldKeyOptions = JSON.parse(sessionStorage.getItem('fieldKeyOptions'));
-      data.fieldFormatOptions = [
-        { label: 'Boolean', value: 'bool' },
-        { label: 'Date', value: 'date' },
-        // { label: 'File', value: 'attachment' },
-        { label: 'Float', value: 'float' },
-        { label: 'Integer', value: 'int' },
-        // { label: 'Key/value list', value: 'enumeration' },
-        // { label: 'Link', value: 'link' },
-        // { label: 'List', value: 'list' },
-        // { label: 'Long text', value: 'text' },
-        { label: 'Text', value: 'string' },
-        // { label: 'User', value: 'user' },
-        // { label: 'Version', value: 'version' },
-      ];
+  const handleCloseBtnClick = () => {
+    elements.designerOverlay.style.display = 'none';
+    elements.iframe.src = elements.iframe.src; // Refresh the iframe
+  };
 
-      iframeWindow.postMessage({
-        type: 'openDesigner',
-        data: data
-      }, window.location.origin);
-    });
+  const handleMessageEvent = (event) => {
+    if (event.origin !== window.location.origin) return;
 
-    closeBtn.addEventListener('click', function() {
-      designerOverlay.style.display = 'none';
-      iframe.src = iframe.src; // Refresh the iframe
-    });
+    if (event.data.type === 'updateData') {
+      const { schemas } = event.data.data;
+      elements.schemasField.value = JSON.stringify(schemas);
+    }
+  };
 
-    window.addEventListener('message', function(event) {
-      if (event.origin !== window.location.origin) {
-        return;
-      }
+  elements.trackerIdSelect?.addEventListener('change', loadTrackerData);
+  loadTrackerData();
 
-      if (event.data.type === 'updateData') {
-        // Only updating schemas and inputs
-        const { schemas, inputs } = event.data.data;
-        schemasField.value = JSON.stringify(schemas);
-        inputsField.value = JSON.stringify(inputs);
-      }
-    });
-  }
+  elements.templateDownloadBtn?.addEventListener('click', handleTemplateDownloadClick);
+  elements.templateUploadBtn?.addEventListener('click', handleTemplateUploadClick);
+  elements.templateFileInput?.addEventListener('change', handleTemplateFileChange);
 
+  elements.uploadField?.addEventListener('change', function() {
+    encodeBasePDF(this);
+  });
+
+  elements.useBlankPdfLink?.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (elements.basepdfField) {
+      elements.basepdfField.value = '';
+      elements.uploadField.value = '';
+      toggleBasePDFControls();
+    }
+  });
+
+  elements.openBtn?.addEventListener('click', handleOpenBtnClick);
+  elements.closeBtn?.addEventListener('click', handleCloseBtnClick);
+
+  window.addEventListener('message', handleMessageEvent);
 });

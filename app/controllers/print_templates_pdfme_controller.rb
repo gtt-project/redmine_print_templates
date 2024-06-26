@@ -23,7 +23,7 @@ class PrintTemplatesPdfmeController < ApplicationController
     @csrf_token = form_authenticity_token
   end
 
-  def form
+  def viewer
     issue_id = params[:issue_id]
     api_key = User.current.api_key
 
@@ -54,13 +54,6 @@ class PrintTemplatesPdfmeController < ApplicationController
     # Pass the CSRF token to the view
     @csrf_token = form_authenticity_token
   end
-
-  # Future actions for viewer, generator, etc.
-  # def viewer
-  # end
-
-  # def generator
-  # end
 
   private
 

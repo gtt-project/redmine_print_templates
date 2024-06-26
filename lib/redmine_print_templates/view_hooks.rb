@@ -3,13 +3,21 @@ module RedminePrintTemplates
 
     def view_layouts_base_body_bottom(context={})
       tags = []
-      if User.current.admin?
-        tags << javascript_include_tag('print_templates_font.js', plugin: 'redmine_print_templates')
+      controller = context[:controller]
+
+      # Load specific JS for admin in print_templates menu
+      if User.current.admin? && controller.controller_name == 'print_templates' && ['index', 'new', 'edit'].include?(controller.action_name)
         tags << javascript_include_tag('print_templates_designer.js', plugin: 'redmine_print_templates')
+
+      # Load print_templates_font.js in plugin settings
+      elsif User.current.admin? && controller.controller_name == 'settings' && controller.action_name == 'plugin' && controller.params[:id] == 'redmine_print_templates'
+        tags << javascript_include_tag('print_templates_font.js', plugin: 'redmine_print_templates')
+
+      # Load viewer JS only if designer JS is not loaded
+      elsif User.current.allowed_to?(:view_print_templates, context[:project], global: true)
+        tags << javascript_include_tag('print_templates_viewer.js', plugin: 'redmine_print_templates')
       end
-      if User.current.allowed_to?(:view_print_templates, context[:project], global: true)
-        tags << javascript_include_tag('print_templates_form.js', plugin: 'redmine_print_templates')
-      end
+
       tags.join("\n")
     end
 

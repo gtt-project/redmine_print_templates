@@ -15,7 +15,7 @@ export default {
   mode: 'production',
   entry: {
     'pdfme-designer': path.join(__dirname, 'src', 'designer.ts'),
-    'pdfme-form': path.join(__dirname, 'src', 'form.ts')
+    'pdfme-viewer': path.join(__dirname, 'src', 'viewer.ts')
   },
   module: {
     rules: [

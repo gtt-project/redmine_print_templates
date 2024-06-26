@@ -13,6 +13,23 @@ export interface DesignerOptions {
   fieldFormatOptions?: { label: string; value: string }[];
 }
 
+export interface FormOptions {
+  container: HTMLElement | null;
+  template?: Template;
+  inputs?: { [key: string]: any };
+  locale?: string;
+  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
+  fieldFormatOptions?: { label: string; value: string }[];
+}
+
+export interface ViewerOptions {
+  container: HTMLElement | null;
+  template?: Template;
+  locale?: string;
+  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
+  fieldFormatOptions?: { label: string; value: string }[];
+}
+
 export const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl', 'zh', 'ko', 'de', 'es', 'fr'] as const;
 
 export type SupportedLocale = typeof supportedLocales[number];

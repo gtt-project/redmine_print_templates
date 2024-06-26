@@ -31,6 +31,10 @@ en:
   print_templates_settings_general_placeholder_empty: "Empty field placeholder text"
   print_templates_settings_general_placeholder_note: "Enter text to display in empty fields, or leave this blank to keep fields empty."
 
+  label_core_fields: "Core Fields"
+  label_custom_fields: "Custom Fields"
+  label_special_fields: "Special Fields"
+
   pdf_properties_print_templates_settings: "PDF Properties"
   print_templates_settings_general_pdf_author: "Author"
   print_templates_settings_general_pdf_creator: "Creator"
