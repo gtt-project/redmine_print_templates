@@ -2,9 +2,9 @@
   <p><%= f.text_field :name, required: true, size: 50 %></p>
   <p>
     <%= f.select :tracker_id,
-                options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
-                { required: true },
-                { data: { url: url_for(controller: 'print_templates', action: 'fields_for_tracker', format: :js) } } %>
+        options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),
+        { required: true },
+        { data: { url: url_for(controller: 'print_templates', action: 'fields_for_tracker', format: :json) } } %>
   </p>
 
   <p>
@@ -30,18 +30,7 @@
 <div id="designer-fullscreen" class="pdfme-overlay" style="display:none;">
   <div id="designer-button-bar" style="display: flex; align-items: center; justify-content: space-between;">
     <div>
-      <!-- Dropdown for issue fields -->
-      <%= select_tag :field, options_for_select([]), id: 'tracker-fields', include_blank: true, class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' %>
-
-      <!-- Button to create a new field -->
-      <%= button_tag type: 'button', id: 'add-field-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
-        <span class="ui-icon ui-icon-plus"></span>
-        <%= l(:button_print_template_add_field) %>
-      <% end %>
-    </div>
-
-    <div style="margin-right:15px;">
-      <!-- Buttons aligned to the right -->
+      <!-- Buttons aligned to the left -->
       <input type="file" id="template-file-input" style="display: none;" accept="application/json">
       <%= button_tag type: 'button', id: 'template_upload-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
         <span class="ui-icon ui-icon-arrowthick-1-n"></span>
@@ -51,6 +40,10 @@
         <span class="ui-icon ui-icon-arrowthick-1-s"></span>
         <%= l(:button_print_template_designer_template_download) %>
       <% end %>
+    </div>
+
+    <div style="margin-right:15px;">
+      <!-- Buttons aligned to the right -->
       <%= button_tag type: 'button', id: 'close-designer-fullscreen-btn', class: 'btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary' do %>
         <span class="ui-icon ui-icon-closethick"></span>
         <%= l(:button_print_template_designer_close) %>

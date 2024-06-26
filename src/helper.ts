@@ -1,8 +1,9 @@
-
-import { Template,getDefaultFont } from '@pdfme/common';
+import { Template, getDefaultFont,PDFME_VERSION } from '@pdfme/common';
 import { Designer } from '@pdfme/ui';
 import { getPlugins } from './schemas';
-import { validateLocale, SupportedLocale } from './locales';
+import { validateLocale } from './types';
+
+import type { DesignerOptions, SupportedLocale } from './types';
 
 declare const embeddedFonts: any[];
 
@@ -10,20 +11,24 @@ const defaultTemplate: Template = {
   basePdf: { width: 210, height: 297, padding: [0, 0, 0, 0] },
   sampledata: [],
   schemas: [{} as Record<string, any>],
-  pdfmeVersion: '1.0.0'
+  pdfmeVersion: PDFME_VERSION
 };
 
-interface DesignerOptions {
-  container: HTMLElement | null;
-  template?: Template;
-  locale?: string;
-}
-
+/**
+ * Checks if a value is valid.
+ * @param value - The value to check.
+ * @returns Whether the value is valid or not.
+ */
 function isValidValue<T>(value: T | null | undefined | ''): value is T {
   return value !== undefined && value !== null && value !== '';
 }
 
-export function createTemplate(template: Partial<Template> = {}): Template {
+/**
+ * Creates a template object based on the provided partial template.
+ * @param template - The partial template object.
+ * @returns The final template object.
+ */
+function createTemplate(template: Partial<Template> = {}): Template {
   const finalTemplate: Template = {
     basePdf: isValidValue(template.basePdf) ? template.basePdf : defaultTemplate.basePdf,
     sampledata: isValidValue(template.sampledata) ? template.sampledata : defaultTemplate.sampledata,
@@ -33,10 +38,17 @@ export function createTemplate(template: Partial<Template> = {}): Template {
   return finalTemplate;
 }
 
+/**
+ * Opens the PDFMe Designer in the specified container.
+ * @param options - The options for opening the Designer.
+ * @returns A promise that resolves to the Designer instance, or undefined if it fails to open.
+ */
 export async function openDesigner({
   container,
   template = defaultTemplate,
-  locale = 'en'
+  locale = 'en',
+  fieldKeyOptions = [],
+  fieldFormatOptions = [],
 }: DesignerOptions): Promise<Designer | undefined> {
 
   // Set the default fonts
@@ -57,7 +69,7 @@ export async function openDesigner({
   let designer = new Designer({
     domContainer: container,
     template: createTemplate(template) as Template | any,
-    plugins: getPlugins(),
+    plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
     options: {
       lang: validatedLocale,
       theme: {
@@ -83,18 +95,12 @@ export async function openDesigner({
   return designer;
 }
 
-export function downloadTemplate(designer: Designer, trackerName: string) {
-  if (designer) {
-    const templateData = designer.getTemplate();
-    if (templateData) {
-      // Format the filename with the tracker name
-      const fileName = `template_${trackerName.toLowerCase().replace(/\s+/g, '_')}`;
-      downloadJsonFile(templateData, fileName);
-    }
-  }
-}
-
-export const downloadJsonFile = (json: unknown, title: string) => {
+/**
+ * Downloads a JSON file containing the template data.
+ * @param json - The template data to download.
+ * @param title - The title of the file.
+ */
+const downloadJsonFile = (json: unknown, title: string) => {
   if (typeof window !== 'undefined') {
     const blob = new Blob([JSON.stringify(json)], {
       type: 'application/json',
@@ -108,6 +114,26 @@ export const downloadJsonFile = (json: unknown, title: string) => {
   }
 };
 
+/**
+ * Downloads the current template as a JSON file.
+ * @param designer - The Designer instance.
+ * @param trackerName - The name of the tracker.
+ */
+export function downloadTemplate(designer: Designer, trackerName: string) {
+  if (designer) {
+    const templateData = designer.getTemplate();
+    if (templateData) {
+      const fileName = `template_${trackerName.toLowerCase().replace(/\s+/g, '_')}`;
+      downloadJsonFile(templateData, fileName);
+    }
+  }
+}
+
+/**
+ * Updates the template of the Designer instance.
+ * @param designer - The Designer instance.
+ * @param templateData - The new template data.
+ */
 export function uploadTemplate(designer: Designer, templateData: Template) {
   if (designer) {
     designer.updateTemplate(templateData);

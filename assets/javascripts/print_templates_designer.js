@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const iframe = document.getElementById('pdfme-designer-iframe');
   const uploadField = document.getElementById('pdf-upload');
   const useBlankPdfLink = document.getElementById('use-blank-pdf');
-  const fieldsDropdown = document.getElementById('tracker-fields');
-  const addFieldBtn = document.getElementById('add-field-btn');
   const templateDownloadBtn = document.getElementById('template_download-designer-fullscreen-btn');
   const templateUploadBtn = document.getElementById('template_upload-designer-fullscreen-btn');
   const templateFileInput = document.getElementById('template-file-input');
@@ -21,7 +19,15 @@ document.addEventListener("DOMContentLoaded", function() {
       Rails.ajax({
         url: trackerIdSelect.getAttribute('data-url') + "?tracker_id=" + trackerIdSelect.value,
         type: 'GET',
-        dataType: 'script'
+        dataType: 'json',
+        success: function(response) {
+          const coreFields = response.coreFields;
+          const customFields = response.customFields;
+          const specialFields = response.specialFields;
+
+          const fieldKeyOptions = createFieldKeyOptions(coreFields, customFields, specialFields);
+          sessionStorage.setItem('fieldKeyOptions', JSON.stringify(fieldKeyOptions));
+        }
       });
     }
   }
@@ -36,14 +42,22 @@ document.addEventListener("DOMContentLoaded", function() {
     loadTrackerData();
   }
 
-  // Function to get the selected field's details
-  function getSelectedFieldDetails() {
-    const selectedOption = fieldsDropdown.options[fieldsDropdown.selectedIndex];
-    return {
-      identifier: selectedOption.value,
-      name: selectedOption.text,
-      format: selectedOption.getAttribute('data-format')
-    };
+  // Function to create fieldKeyOptions from tracker data
+  function createFieldKeyOptions(coreFields, customFields, specialFields) {
+    return [
+      {
+        label: 'Core Fields',
+        options: coreFields.map(field => ({ label: field.label, value: field.key })),
+      },
+      {
+        label: 'Custom Fields',
+        options: customFields.map(field => ({ label: field.label, value: field.key })),
+      },
+      {
+        label: 'Special Fields',
+        options: specialFields.map(field => ({ label: field.label, value: field.key })),
+      },
+    ];
   }
 
   if (templateDownloadBtn) {
@@ -158,6 +172,22 @@ document.addEventListener("DOMContentLoaded", function() {
       schemasField.value ? data.schemas = JSON.parse(schemasField.value) : null;
       inputsField.value  ? data.inputs  = JSON.parse(inputsField.value) : null;
 
+      data.fieldKeyOptions = JSON.parse(sessionStorage.getItem('fieldKeyOptions'));
+      data.fieldFormatOptions = [
+        { label: 'Boolean', value: 'bool' },
+        { label: 'Date', value: 'date' },
+        // { label: 'File', value: 'attachment' },
+        { label: 'Float', value: 'float' },
+        { label: 'Integer', value: 'int' },
+        // { label: 'Key/value list', value: 'enumeration' },
+        // { label: 'Link', value: 'link' },
+        // { label: 'List', value: 'list' },
+        // { label: 'Long text', value: 'text' },
+        { label: 'Text', value: 'string' },
+        // { label: 'User', value: 'user' },
+        // { label: 'Version', value: 'version' },
+      ];
+
       iframeWindow.postMessage({
         type: 'openDesigner',
         data: data
@@ -183,15 +213,4 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  if (addFieldBtn && fieldsDropdown && iframe) {
-    addFieldBtn.addEventListener('click', function() {
-      const selectedField = getSelectedFieldDetails();
-      const iframeWindow = iframe.contentWindow;
-
-      iframeWindow.postMessage({
-        type: 'addField',
-        data: selectedField
-      }, window.location.origin);
-    });
-  }
 });

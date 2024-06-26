@@ -1,6 +1,20 @@
+import { Template } from '@pdfme/common';
+
+export interface PluginOptions {
+  fieldKeyOptions: { label: string; options: { label: string; value: string }[] }[];
+  fieldFormatOptions: { label: string; value: string }[];
+}
+
+export interface DesignerOptions {
+  container: HTMLElement | null;
+  template?: Template;
+  locale?: string;
+  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
+  fieldFormatOptions?: { label: string; value: string }[];
+}
+
 export const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl', 'zh', 'ko', 'de', 'es', 'fr'] as const;
 
-// This type will be "en" | "ja" | "ar" | "th" | "it" | "pl" | "zh" | "ko" | "de" | "es" | "fr"
 export type SupportedLocale = typeof supportedLocales[number];
 
 /**

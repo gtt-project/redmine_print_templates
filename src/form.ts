@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
               domContainer: container,
               template: template as Template | any,
               inputs: inputs,
-              plugins: getPlugins(),
+              // plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
               options: {
                 theme: {
                   token: {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
             generate({
               template: form.getTemplate() as Template | any,
               inputs: currentInputs,
-              plugins: getPlugins(),
+              // plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
               options: {
                 font: availableFonts,
                 author: pluginSettings.default_pdf_author || "",

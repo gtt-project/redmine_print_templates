@@ -1,6 +1,5 @@
 import { Designer } from '@pdfme/ui';
 import { openDesigner, downloadTemplate, uploadTemplate } from './helper';
-import { addField } from './schemas';
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -26,13 +25,10 @@ document.addEventListener("DOMContentLoaded", function() {
             schemas: data.schemas,
             sampledata: data.inputs,
           },
-          locale: locale
+          locale: locale,
+          fieldKeyOptions: data.fieldKeyOptions,
+          fieldFormatOptions: data.fieldFormatOptions,
         });
-        break;
-      case 'addField':
-        if (designer) {
-          addField(designer, data);
-        }
         break;
       case 'downloadTemplate':
         if (designer) {

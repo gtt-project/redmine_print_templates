@@ -27,6 +27,7 @@
     "@pdfme/generator": "4.0.2",
     "@pdfme/schemas": "4.0.2",
     "@pdfme/ui": "4.0.2",
+    "@types/fontkit": "^2.0.7",
     "@types/uuid": "^10.0.0",
     "signature_pad": "^5.0.2",
     "ts-loader": "^9.5.1",
