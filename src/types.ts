@@ -1,37 +1,57 @@
 import { Template } from '@pdfme/common';
+import { Form } from '@pdfme/ui';
 
-export interface PluginOptions {
-  fieldKeyOptions: { label: string; options: { label: string; value: string }[] }[];
-  fieldFormatOptions: { label: string; value: string }[];
+// Common Options Interfaces
+export interface FieldOption {
+  label: string;
+  value: string;
 }
 
-export interface DesignerOptions {
+export interface FieldKeyOption {
+  label: string;
+  options: FieldOption[];
+}
+
+export interface CommonOptions {
+  locale?: string;
+  fieldKeyOptions?: FieldKeyOption[];
+  fieldFormatOptions?: FieldOption[];
+}
+
+// Plugin Options Interface
+export interface PluginOptions extends CommonOptions {
+  fieldKeyOptions: FieldKeyOption[];
+  fieldFormatOptions: FieldOption[];
+}
+
+// Designer Options Interface
+export interface DesignerOptions extends CommonOptions {
   container: HTMLElement | null;
   template?: Template;
-  locale?: string;
-  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
-  fieldFormatOptions?: { label: string; value: string }[];
 }
 
-export interface FormOptions {
+// Form Options Interface
+export interface FormOptions extends CommonOptions {
   container: HTMLElement | null;
   template?: Template;
   inputs?: { [key: string]: any };
-  locale?: string;
-  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
-  fieldFormatOptions?: { label: string; value: string }[];
 }
 
-export interface ViewerOptions {
+// Viewer Options Interface
+export interface ViewerOptions extends CommonOptions {
   container: HTMLElement | null;
   template?: Template;
-  locale?: string;
-  fieldKeyOptions?: { label: string; options: { label: string; value: string }[] }[];
-  fieldFormatOptions?: { label: string; value: string }[];
 }
 
-export const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl', 'zh', 'ko', 'de', 'es', 'fr'] as const;
+// Generator Options Interface
+export interface GeneratorOptions extends CommonOptions {
+  form: Form;
+  options?: { [key: string]: any };
+  download?: boolean;
+}
 
+// Supported Locales
+export const supportedLocales = ['en', 'ja', 'ar', 'th', 'it', 'pl', 'zh', 'ko', 'de', 'es', 'fr'] as const;
 export type SupportedLocale = typeof supportedLocales[number];
 
 /**

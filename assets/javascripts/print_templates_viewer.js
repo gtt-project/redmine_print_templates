@@ -47,10 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleDownloadPdfClick = () => {
     if (elements.formIframe?.contentWindow) {
-      elements.formIframe.contentWindow.postMessage(
-        { type: 'generatePdf' },
-        window.location.origin
-      );
+      elements.formIframe.contentWindow.postMessage({
+        type: 'generatePdf',
+        data: {
+          download: true
+        }
+      }, window.location.origin);
     }
   };
 

@@ -32,12 +32,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
       case 'generatePdf':
         if (form) {
-          const options: { [key: string]: any } = {
-            note: "This is a note for the PDF", // TBD
-            locale: locale,
-          };
+          const options = data || {};
+          options.language = htmllang;
 
-          generatePdf(form, options);
+          // Determine whether to download the PDF or open in the browser
+          const download = false;
+
+          generatePdf({
+            form: form,
+            options: options,
+            fieldKeyOptions: data.fieldKeyOptions,
+            fieldFormatOptions: data.fieldFormatOptions,
+            download: download
+          }).catch((error) => {
+            console.error('Error generating PDF:', error);
+          });
         }
         break;
       // Add other cases as needed

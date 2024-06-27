@@ -5,7 +5,7 @@ import { generate } from '@pdfme/generator';
 import { getPlugins } from './schemas';
 import { validateLocale } from './types';
 
-import type { DesignerOptions, FormOptions, ViewerOptions, SupportedLocale } from './types';
+import type { DesignerOptions, FormOptions, ViewerOptions, GeneratorOptions, SupportedLocale } from './types';
 
 declare const issueData: any;
 declare const embeddedFonts: any[];
@@ -24,6 +24,26 @@ const defaultTemplate: Template = {
  */
 function isValidValue<T>(value: T | null | undefined | ''): value is T {
   return value !== undefined && value !== null && value !== '';
+}
+
+/**
+ * Get available fonts
+ * @returns A promise that resolves to the available fonts.
+ */
+async function getAvailableFonts(): Promise<Record<string, any>> {
+  const availableFonts = getDefaultFont();
+
+  for (const font of embeddedFonts) {
+    const response = await fetch(font.url);
+    const arrayBuffer = await response.arrayBuffer();
+
+    availableFonts[font.name] = {
+      data: arrayBuffer,
+      // include fallback and subset options if necessary
+    };
+  }
+
+  return availableFonts;
 }
 
 /**
@@ -53,19 +73,6 @@ export async function openDesigner({
   fieldFormatOptions = [],
 }: DesignerOptions): Promise<Designer | undefined> {
 
-  // Set the default fonts
-  const availableFonts = getDefaultFont();
-
-  for (const font of embeddedFonts) {
-    const response = await fetch(font.url);
-    const arrayBuffer = await response.arrayBuffer();
-
-    availableFonts[font.name] = {
-      data: arrayBuffer,
-      // include fallback and subset options if necessary
-    };
-  }
-
   const validatedLocale: SupportedLocale = validateLocale(locale);
 
   let designer = new Designer({
@@ -79,7 +86,7 @@ export async function openDesigner({
           colorPrimary: '#f1515c'
         },
       },
-      font: availableFonts
+      font: await getAvailableFonts()
     },
   });
 
@@ -109,19 +116,6 @@ export async function openViewer({
   fieldFormatOptions = [],
 }: FormOptions): Promise<Form | undefined> {
 
-    // Set the default fonts
-    const availableFonts = getDefaultFont();
-
-    for (const font of embeddedFonts) {
-      const response = await fetch(font.url);
-      const arrayBuffer = await response.arrayBuffer();
-
-      availableFonts[font.name] = {
-        data: arrayBuffer,
-        // include fallback and subset options if necessary
-      };
-    }
-
     const validatedLocale: SupportedLocale = validateLocale(locale);
     // const inputs = [mapIssueDataToTemplate(issueData, schemas)] || [{}];
 
@@ -130,6 +124,15 @@ export async function openViewer({
       template: createTemplate(template) as Template | any,
       plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
       inputs: [{}],
+      options: {
+        lang: validatedLocale,
+        theme: {
+          token: {
+            colorPrimary: '#f1515c'
+          },
+        },
+        font: await getAvailableFonts()
+      },
     });
 
     // Return the Viewer instance
@@ -185,77 +188,54 @@ export function uploadTemplate(designer: Designer, templateData: Template) {
  * Generates a PDF file based on the current template and inputs.
  * @param form - The Form instance.
  * @param options - The options for generating the PDF.
+ * @param fieldKeyOptions - The field key options.
+ * @param fieldFormatOptions - The field format options.
+ * @param download - Whether to download the PDF file or not.
  * @returns A promise that resolves to the generated PDF file.
  */
-export async function generatePdf(form: Form, options: { [key: string]: any }) {
-  if (form) {
-    const currentInputs = form.getInputs();
+export async function generatePdf({
+  form,
+  options = {},
+  fieldKeyOptions = [],
+  fieldFormatOptions = [],
+  download = false,
+}: GeneratorOptions & { download?: boolean }): Promise<Blob | undefined> {
 
-    // Set the default fonts
-    const availableFonts = getDefaultFont();
+  const pdf = await generate({
+    template: form.getTemplate() as Template | any,
+    inputs: form.getInputs(),
+    plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
+    options: {
+      font: await getAvailableFonts(),
+      author: pluginSettings.default_pdf_author || '',
+      creator: pluginSettings.default_pdf_creator || '',
+      keywords: [],
+      language: 'en-US',
+      producer: pluginSettings.default_pdf_producer || '',
+      subject: 'Redmine Issue Report',
+      title: `Issue #${issueData.issue.id}: Feature Implementation`,
+      ...options,
+    },
+  });
 
-    for (const font of embeddedFonts) {
-      const response = await fetch(font.url);
-      const arrayBuffer = await response.arrayBuffer();
+  const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
 
-      availableFonts[font.name] = {
-        data: arrayBuffer,
-        // include fallback and subset options if necessary
-      };
-    }
-
-    return generate({
-      template: form.getTemplate() as Template | any,
-      inputs: currentInputs,
-      options: {
-        font: availableFonts,
-        ...options,
-      },
-    });
+  // Determine the action based on the 'download' parameter
+  if (download) {
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = `${timestamp}_issue_${issueData.issue.id}.pdf`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(downloadLink.href);
+  } else {
+    window.open(URL.createObjectURL(blob));
   }
+
+  return blob;
 }
-
-
-
-
-
-//       case 'generatePdf':
-//         if (form) {
-//           const currentInputs = form.getInputs();
-
-
-//             generate({
-//               template: form.getTemplate() as Template | any,
-//               inputs: currentInputs,
-//               // plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
-//               options: {
-//                 font: availableFonts,
-//                 author: pluginSettings.default_pdf_author || "",
-//                 creator: pluginSettings.default_pdf_creator || "",
-//                 keywords: [],
-//                 language: "en-US",
-//                 producer: pluginSettings.default_pdf_producer || "",
-//                 subject: "Redmine Issue Report",
-//                 title: `Issue #${issueId}: Feature Implementation`,
-//               },
-//             }).then((pdf) => {
-//               const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-//               const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '');
-
-//                // Create and trigger download link
-//               const downloadLink = document.createElement("a");
-//               downloadLink.href = URL.createObjectURL(blob);
-//               downloadLink.download = `${timestamp}_issue_${issueId}.pdf`;
-//               document.body.appendChild(downloadLink);
-//               downloadLink.click();
-//               document.body.removeChild(downloadLink);
-//               URL.revokeObjectURL(downloadLink.href);
-//             }).catch((error) => {
-//               console.error('Error generating PDF:', error);
-//             });
-//           }
-
-
 
 // function mapIssueDataToTemplate(issueData: any, template: any) {
 //   const mappedInputs: any = {};
