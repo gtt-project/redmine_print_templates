@@ -11,6 +11,12 @@ declare const issueData: any;
 declare const embeddedFonts: any[];
 declare const pluginSettings: any;
 
+const themeSettings = {
+  token: {
+    colorPrimary: '#f1515c'
+  },
+};
+
 const defaultTemplate: Template = {
   basePdf: { width: 210, height: 297, padding: [0, 0, 0, 0] },
   schemas: [{} as Record<string, any>],
@@ -81,11 +87,7 @@ export async function openDesigner({
     plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
     options: {
       lang: validatedLocale,
-      theme: {
-        token: {
-          colorPrimary: '#f1515c'
-        },
-      },
+      theme: themeSettings,
       font: await getAvailableFonts()
     },
   });
@@ -126,11 +128,7 @@ export async function openViewer({
       inputs: [{}],
       options: {
         lang: validatedLocale,
-        theme: {
-          token: {
-            colorPrimary: '#f1515c'
-          },
-        },
+        theme: themeSettings,
         font: await getAvailableFonts()
       },
     });

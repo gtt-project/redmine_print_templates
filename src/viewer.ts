@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
           options.language = htmllang;
 
           // Determine whether to download the PDF or open in the browser
-          const download = false;
+          const download = true;
 
           generatePdf({
             form: form,
