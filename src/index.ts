@@ -5,7 +5,7 @@ import { generate } from '@pdfme/generator';
 import { getPlugins } from './schemas';
 import { validateLocale } from './types';
 
-import type { DesignerOptions, FormOptions, ViewerOptions, GeneratorOptions, SupportedLocale } from './types';
+import type { DesignerOptions, FormOptions, ViewerOptions, GeneratorOptions } from './types';
 
 declare const issueData: any;
 declare const embeddedFonts: any[];
@@ -79,14 +79,12 @@ export async function openDesigner({
   fieldFormatOptions = [],
 }: DesignerOptions): Promise<Designer | undefined> {
 
-  const validatedLocale: SupportedLocale = validateLocale(locale);
-
   let designer = new Designer({
     domContainer: container,
     template: createTemplate(template) as Template | any,
     plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
     options: {
-      lang: validatedLocale,
+      lang: validateLocale(locale),
       theme: themeSettings,
       font: await getAvailableFonts()
     },
@@ -118,24 +116,25 @@ export async function openViewer({
   fieldFormatOptions = [],
 }: FormOptions): Promise<Form | undefined> {
 
-    const validatedLocale: SupportedLocale = validateLocale(locale);
-    // const inputs = [mapIssueDataToTemplate(issueData, schemas)] || [{}];
+  const templateData = createTemplate(template) as Template | any;
+  const pluginData = getPlugins({ fieldKeyOptions, fieldFormatOptions });
+  const inputData = mapIssueDataToTemplate(issueData, templateData) as Record<string, any>[]  || [{}];
 
-    let form = new Form({
-      domContainer: container,
-      template: createTemplate(template) as Template | any,
-      plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
-      inputs: [{}],
-      options: {
-        lang: validatedLocale,
-        theme: themeSettings,
-        font: await getAvailableFonts()
-      },
-    });
+  let form = new Form({
+    domContainer: container,
+    template: templateData,
+    plugins: pluginData,
+    inputs: inputData,
+    options: {
+      lang: validateLocale(locale),
+      theme: themeSettings,
+      font: await getAvailableFonts()
+    },
+  });
 
-    // Return the Viewer instance
-    return form;
-  }
+  // Return the Viewer instance
+  return form;
+}
 
 /**
  * Downloads a JSON file containing the template data.
@@ -208,10 +207,10 @@ export async function generatePdf({
       author: pluginSettings.default_pdf_author || '',
       creator: pluginSettings.default_pdf_creator || '',
       keywords: [],
-      language: 'en-US',
+      // language: 'en-US',
       producer: pluginSettings.default_pdf_producer || '',
-      subject: 'Redmine Issue Report',
-      title: `Issue #${issueData.issue.id}: Feature Implementation`,
+      subject: `[${issueData.issue.tracker.name}] ${issueData.issue.project.name}`,
+      title: `[#${issueData.issue.id}] ${issueData.issue.subject}`,
       ...options,
     },
   });
@@ -235,40 +234,57 @@ export async function generatePdf({
   return blob;
 }
 
-// function mapIssueDataToTemplate(issueData: any, template: any) {
-//   const mappedInputs: any = {};
+/**
+ * Retrieves the value from a nested object based on a dot-separated key path.
+ * @param obj - The object to retrieve the value from.
+ * @param keyPath - The dot-separated key path.
+ * @returns The value at the specified key path, or undefined if not found.
+ */
+function getNestedValue(obj: any, keyPath: string): any {
+  return keyPath.split('.').reduce((acc, key) => {
+    if (acc && acc[key] !== undefined) {
+      return acc[key];
+    } else {
+      console.warn(`Key not found: ${keyPath} at ${key}`);
+      return undefined;
+    }
+  }, obj);
+}
 
-//   template.forEach((page: any) => {
-//     Object.keys(page).forEach(key => {
-//       const match = key.match(/\$\(([^#]+)#([^)]+)\)/);
-//       if (match && match.length >= 3) {
-//         const type = match[1];
-//         const field = match[2];
-//         let value = '';
+/**
+ * Maps issue data to the template fields.
+ * @param issueData - The issue data object.
+ * @param template - The template object.
+ * @returns The mapped inputs object.
+ */
+function mapIssueDataToTemplate(issueData: any, template: Template) {
+  // console.log('Issue Data:', issueData);
+  // console.log('Template:', template);
+  const mappedInputs: Record<string, any>[] = [];
 
-//         switch (type) {
-//           case 'standard':
-//             const fields = field.split('.');
-//             value = fields.reduce((acc, curr) => acc && acc[curr], issueData.issue);
-//             break;
-//           case 'custom':
-//             const customField = issueData.issue.custom_fields.find((f: any) => f.name === field);
-//             value = customField ? customField.value : '';
-//             break;
-//           case 'special':
-//             // Handle special cases here
-//             break;
-//           default:
-//             // Handle unknown type
-//             break;
-//         }
+  template.schemas.forEach((page: any, pageIndex: number) => {
+    // console.log('Page', pageIndex, page);
+    const mappedPage: Record<string, any> = {};
 
-//         if (value !== undefined) {
-//           mappedInputs[key] = String(value);
-//         }
-//       }
-//     });
-//   });
+    Object.keys(page).forEach((fieldKey: string) => {
+      // console.log('Field:', fieldKey, field);
+      const field = page[fieldKey];
 
-//   return mappedInputs;
-// }
+      if (field.extended) {
+        // console.log('Extended Field:', field.extended);
+        const { field_key } = field.extended;
+        const value = getNestedValue(issueData.issue, field_key);
+
+        if (value !== undefined) {
+          mappedPage[fieldKey] = value;
+        }
+      }
+    });
+
+    mappedInputs.push(mappedPage);
+  });
+
+  // Ensure the mappedInputs array contains only one object with all the fields
+  return [Object.assign({}, ...mappedInputs)];
+}
+
