@@ -20,14 +20,14 @@ import type { PluginOptions } from './types';
 export const getPlugins = (options: PluginOptions) => {
   return {
     Text: plugins.extendedText(options),
-    ReadOnlyText: readOnlyText,
+    // ReadOnlyText: readOnlyText,
     Table: tableBeta,
-    Image: image,
-    ReadOnlyImage: readOnlyImage,
+    Image: plugins.extendedImage(options),
+    // ReadOnlyImage: readOnlyImage,
     Line: line,
     Rectangle: rectangle,
     Ellipse: ellipse,
-    // SVG: svg,
+    SVG: svg,
     // ReadOnlySvg: readOnlySvg,
     QR: barcodes.qrcode,
     Code128: barcodes.code128,
