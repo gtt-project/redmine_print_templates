@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formIframe: document.getElementById('pdfme-form-iframe')
   };
 
-  console.log('Print Templates Viewer loaded!');
+  // console.log('Print Templates Viewer loaded!');
 
   const showError = (message) => {
     console.error(message);

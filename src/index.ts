@@ -275,8 +275,8 @@ function getNestedValue(obj: any, keyPath: string): any {
  * @returns The mapped inputs object.
  */
 function mapIssueDataToTemplate(issueData: any, template: Template) {
-  console.log('Issue Data:', issueData);
-  console.log('Template:', template);
+  // console.log('Issue Data:', issueData);
+  // console.log('Template:', template);
   const mappedInputs: Record<string, any>[] = [];
 
   template.schemas.forEach((page: any, pageIndex: number) => {

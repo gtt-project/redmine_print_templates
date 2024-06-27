@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     basepdfIcon: document.getElementById('basepdf-ok-icon')
   };
 
-  console.log('Print Templates Designer loaded!');
+  // console.log('Print Templates Designer loaded!');
 
   const showError = (message) => {
     console.error(message);
