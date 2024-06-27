@@ -14,6 +14,7 @@
     const issueData = <%= raw @issue_data %>;
     const embeddedFonts = <%= raw @fonts.to_json %>;
     const pluginSettings = <%= raw @plugin_settings.to_json %>;
+    const toggle_editing = <%= User.current.allowed_to?(:edit_print_templates, @project, global: true) %>;
   </script>
   <%= javascript_include_tag 'pdfme-viewer', plugin: :redmine_print_templates %>
 </body>

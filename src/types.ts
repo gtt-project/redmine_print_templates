@@ -1,5 +1,5 @@
 import { Template } from '@pdfme/common';
-import { Form } from '@pdfme/ui';
+import { Form, Viewer } from '@pdfme/ui';
 
 // Common Options Interfaces
 export interface FieldOption {
@@ -35,6 +35,7 @@ export interface FormOptions extends CommonOptions {
   container: HTMLElement | null;
   template?: Template;
   inputs?: { [key: string]: any };
+  editing?: boolean;
 }
 
 // Viewer Options Interface
@@ -45,7 +46,7 @@ export interface ViewerOptions extends CommonOptions {
 
 // Generator Options Interface
 export interface GeneratorOptions extends CommonOptions {
-  form: Form;
+  instance: Form | Viewer;
   options?: { [key: string]: any };
   download?: boolean;
 }

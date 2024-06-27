@@ -1,9 +1,11 @@
-import { Form } from '@pdfme/ui';
+import { Form, Viewer } from '@pdfme/ui';
 import { openViewer, generatePdf } from '.';
+
+declare const toggle_editing: boolean;
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  let form: Form | undefined;
+  let instance: Form | Viewer | undefined;
 
   const htmllang = document.documentElement.lang || 'en';
   const locale = htmllang.split('-')[0]; // Extract the language part
@@ -18,20 +20,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     switch (type) {
       case 'openViewer':
-        form = await openViewer({
+        instance = await openViewer({
           container: document.getElementById('pdfme-container'),
           template: {
             basePdf: data.basePdf,
             schemas: data.schemas,
           },
           locale: locale,
+          editing: toggle_editing || false,
           fieldKeyOptions: data.fieldKeyOptions,
           fieldFormatOptions: data.fieldFormatOptions,
         });
         break;
 
       case 'generatePdf':
-        if (form) {
+        if (instance) {
           const options = data || {};
           options.language = htmllang;
 
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
           const download = true;
 
           generatePdf({
-            form: form,
+            instance: instance,
             options: options,
             fieldKeyOptions: data.fieldKeyOptions,
             fieldFormatOptions: data.fieldFormatOptions,

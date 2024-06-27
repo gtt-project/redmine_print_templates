@@ -112,28 +112,45 @@ export async function openViewer({
   container,
   template = defaultTemplate,
   locale = 'en',
+  editing = false,
   fieldKeyOptions = [],
   fieldFormatOptions = [],
-}: FormOptions): Promise<Form | undefined> {
+}: FormOptions): Promise<Form | Viewer | undefined> {
 
   const templateData = createTemplate(template) as Template | any;
   const pluginData = getPlugins({ fieldKeyOptions, fieldFormatOptions });
   const inputData = mapIssueDataToTemplate(issueData, templateData) as Record<string, any>[]  || [{}];
 
-  let form = new Form({
-    domContainer: container,
-    template: templateData,
-    plugins: pluginData,
-    inputs: inputData,
-    options: {
-      lang: validateLocale(locale),
-      theme: themeSettings,
-      font: await getAvailableFonts()
-    },
-  });
+  let instance;
 
-  // Return the Viewer instance
-  return form;
+  if (editing) {
+    instance = new Form({
+      domContainer: container,
+      template: templateData,
+      plugins: pluginData,
+      inputs: inputData,
+      options: {
+        lang: validateLocale(locale),
+        theme: themeSettings,
+        font: await getAvailableFonts()
+      },
+    });
+  } else {
+    instance = new Viewer({
+      domContainer: container,
+      template: templateData,
+      plugins: pluginData,
+      inputs: inputData,
+      options: {
+        lang: validateLocale(locale),
+        theme: themeSettings,
+        font: await getAvailableFonts()
+      },
+    });
+  }
+
+  // Return the Viewer or Form instance
+  return instance;
 }
 
 /**
@@ -191,7 +208,7 @@ export function uploadTemplate(designer: Designer, templateData: Template) {
  * @returns A promise that resolves to the generated PDF file.
  */
 export async function generatePdf({
-  form,
+  instance,
   options = {},
   fieldKeyOptions = [],
   fieldFormatOptions = [],
@@ -199,8 +216,8 @@ export async function generatePdf({
 }: GeneratorOptions & { download?: boolean }): Promise<Blob | undefined> {
 
   const pdf = await generate({
-    template: form.getTemplate() as Template | any,
-    inputs: form.getInputs(),
+    template: instance.getTemplate() as Template | any,
+    inputs: instance.getInputs(),
     plugins: getPlugins({ fieldKeyOptions, fieldFormatOptions }),
     options: {
       font: await getAvailableFonts(),
@@ -246,7 +263,7 @@ function getNestedValue(obj: any, keyPath: string): any {
       return acc[key];
     } else {
       console.warn(`Key not found: ${keyPath} at ${key}`);
-      return undefined;
+      return pluginSettings.default_placeholder_empty || '';
     }
   }, obj);
 }
@@ -258,8 +275,8 @@ function getNestedValue(obj: any, keyPath: string): any {
  * @returns The mapped inputs object.
  */
 function mapIssueDataToTemplate(issueData: any, template: Template) {
-  // console.log('Issue Data:', issueData);
-  // console.log('Template:', template);
+  console.log('Issue Data:', issueData);
+  console.log('Template:', template);
   const mappedInputs: Record<string, any>[] = [];
 
   template.schemas.forEach((page: any, pageIndex: number) => {
