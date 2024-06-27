@@ -38,12 +38,6 @@ export interface FormOptions extends CommonOptions {
   editing?: boolean;
 }
 
-// Viewer Options Interface
-export interface ViewerOptions extends CommonOptions {
-  container: HTMLElement | null;
-  template?: Template;
-}
-
 // Generator Options Interface
 export interface GeneratorOptions extends CommonOptions {
   instance: Form | Viewer;

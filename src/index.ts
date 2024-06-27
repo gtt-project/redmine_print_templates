@@ -5,7 +5,7 @@ import { generate } from '@pdfme/generator';
 import { getPlugins } from './schemas';
 import { validateLocale } from './types';
 
-import type { DesignerOptions, FormOptions, ViewerOptions, GeneratorOptions } from './types';
+import type { DesignerOptions, FormOptions, GeneratorOptions } from './types';
 
 declare const issueData: any;
 declare const embeddedFonts: any[];
