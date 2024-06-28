@@ -287,10 +287,8 @@ function mapIssueDataToTemplate(issueData: any, template: Template) {
       // console.log('Field:', fieldKey, field);
       const field = page[fieldKey];
 
-      if (field.extended) {
-        // console.log('Extended Field:', field.extended);
-        const { field_key } = field.extended;
-        const value = getNestedValue(issueData.issue, field_key);
+      if (field.field_key) {
+        const value = getNestedValue(issueData.issue, field.field_key);
 
         if (value !== undefined) {
           mappedPage[fieldKey] = value;

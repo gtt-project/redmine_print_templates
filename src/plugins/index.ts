@@ -1,7 +1,7 @@
 import { signature } from './signature';
-import { createExtendedTextSchema } from './extendedText';
-import { createExtendedImageSchema } from './extendedImage';
-import { createExtendedSvgSchema } from './extendedSVG';
+import { createExtendedTextSchema } from './extended/text';
+import { createExtendedImageSchema } from './extended/image';
+import { createExtendedSvgSchema } from './extended/svg';
 
 import type { PluginOptions } from '../types';
 
