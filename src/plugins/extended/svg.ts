@@ -43,8 +43,9 @@ const createExtendedSvgSchema = (
         widget: 'switch',
         span: 8,
       },
-      divider: {
+      divider1: {
         widget: 'divider',
+        span: 24,
       },
       field_key: {
         title: 'Field Key',
@@ -71,6 +72,10 @@ const createExtendedSvgSchema = (
         type: 'string',
         widget: 'input',
         span: 16,
+      },
+      divider2: {
+        widget: 'divider',
+        span: 24,
       },
       ...component.propPanel.schema,
     };
