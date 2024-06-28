@@ -1,4 +1,4 @@
-import type { Plugin, PDFRenderProps, UIRenderProps, PropPanelWidgetProps, Schema, Plugins } from '@pdfme/common';
+import type { Plugin, PDFRenderProps, UIRenderProps, PropPanelWidgetProps, Schema } from '@pdfme/common';
 import { image } from '@pdfme/schemas';
 
 interface ExtendedImage extends Schema {
@@ -11,7 +11,7 @@ interface ExtendedImage extends Schema {
 const pdfRender = async (arg: PDFRenderProps<ExtendedImage>) => {
   const { schema } = arg;
   if (schema.type === 'extendedImage') {
-    // Handle readOnly property if needed
+    // Handle custom property if needed
   }
   await image.pdf(arg as PDFRenderProps<Schema>);
 };
@@ -19,7 +19,7 @@ const pdfRender = async (arg: PDFRenderProps<ExtendedImage>) => {
 const uiRender = async (arg: UIRenderProps<ExtendedImage>) => {
   const { schema } = arg;
   if (schema.type === 'extendedImage') {
-    // Handle readOnly property if needed
+    // Handle custom property if needed
   }
   await image.ui(arg as UIRenderProps<Schema>);
 };
