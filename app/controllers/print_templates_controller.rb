@@ -167,7 +167,7 @@ class PrintTemplatesController < ApplicationController
   end
 
   def print_template_params
-    params.require(:print_template).permit(:name, :schemas, :basepdf, :tracker_id)
+    params.require(:print_template).permit(:name, :schemas, :basepdf, :tracker_id, :context)
   end
 
   def require_admin

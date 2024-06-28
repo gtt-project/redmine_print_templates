@@ -1,6 +1,18 @@
+<% def localized_context(context) %>
+  <% case context %>
+  <% when 'issue' %>
+    <%= l(:label_print_template_context_option_issue) %>
+  <% when 'issues' %>
+    <%= l(:label_print_template_context_option_issues) %>
+  <% else %>
+    <%= context %>
+  <% end %>
+<% end %>
+
 <tr>
-  <td><%= link_to print_template.name, edit_print_template_path(print_template) %></td>
-  <td class="text"><%= textilizable print_template.tracker.name %></td>
+  <td class="text"><%= link_to print_template.name, edit_print_template_path(print_template) %></td>
+  <td><%= textilizable print_template.tracker.name %></td>
+  <td><%= textilizable localized_context(print_template.context) %></td>
   <td>
     <% if print_template.basepdf.present? %>
       <span class="icon-only icon-ok"></span>

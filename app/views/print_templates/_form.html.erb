@@ -1,5 +1,18 @@
 <div class="box tabular">
   <p><%= f.text_field :name, required: true, size: 50 %></p>
+
+  <p>
+    <%= f.select :context,
+        options_for_select([
+                            [ l(:label_print_template_context_option_issue), 'issue' ],
+                            [ l(:label_print_template_context_option_issues), 'issues', { disabled: true } ],
+                            [ l(:label_print_template_context_option_project), 'project', { disabled: true } ]
+                          ],
+                          @print_template.context || 'issue'),
+        { required: true } %>
+  </p>
+
+
   <p>
     <%= f.select :tracker_id,
         options_from_collection_for_select(@trackers, :id, :name, @print_template.tracker_id || @trackers.first.id),

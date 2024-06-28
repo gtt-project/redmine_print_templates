@@ -1,6 +1,6 @@
 <% if @issue && @issue.tracker %>
   <h3><%= l(:label_print_templates_plural) %></h3>
-  <% print_templates = PrintTemplate.where(tracker_id: @issue.tracker_id).order(:name) %>
+  <% print_templates = PrintTemplate.where(tracker_id: @issue.tracker_id, context: 'issue').order(:name) %>
   <% if print_templates.any? %>
     <p>
       <%= label_tag 'print_template_select', l(:label_select_print_template) %>
