@@ -66,6 +66,8 @@ function clearFontFields() {
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.querySelector('#settings.plugin.plugin-redmine_print_templates');
 
+  // console.log('Print Templates Fonts loaded!');
+
   if (container) {
     const form = container.querySelector('form');
 

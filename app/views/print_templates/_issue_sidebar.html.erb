@@ -1,6 +1,6 @@
 <% if @issue && @issue.tracker %>
   <h3><%= l(:label_print_templates_plural) %></h3>
-  <% print_templates = PrintTemplate.where(tracker_id: @issue.tracker_id).order(:name) %>
+  <% print_templates = PrintTemplate.where(tracker_id: @issue.tracker_id, context: 'issue').order(:name) %>
   <% if print_templates.any? %>
     <p>
       <%= label_tag 'print_template_select', l(:label_select_print_template) %>
@@ -29,7 +29,7 @@
           <% end %>
         </div>
       </div>
-      <iframe id="pdfme-form-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'form', issue_id: @issue.id) %>"></iframe>
+      <iframe id="pdfme-form-iframe" src="<%= url_for(controller: 'print_templates_pdfme', action: 'viewer', issue_id: @issue.id) %>"></iframe>
     </div>
   <% else %>
     <p><%= l(:label_no_print_template_available) %>

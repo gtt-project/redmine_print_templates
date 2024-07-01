@@ -2,7 +2,7 @@
 <html lang="<%= I18n.locale.to_s %>">
 <head>
   <% plugin_name = Redmine::Plugin.find(:redmine_print_templates).name rescue 'Print Templates' %>
-  <title><%= "#{plugin_name} - Designer" %></title>
+  <title><%= "#{plugin_name} - Viewer" %></title>
   <meta name="csrf-token" content="<%= @csrf_token %>">
   <%= stylesheet_link_tag('print_pdfme', plugin: 'redmine_print_templates') %>
 </head>
@@ -10,9 +10,12 @@
   <div id="pdfme-container">
     <div id="pdfme-loading"><%= l(:reload_page_for_designer) %></div>
   </div>
-  <%= javascript_include_tag 'pdfme-designer', plugin: :redmine_print_templates %>
   <script type="text/javascript">
+    const issueData = <%= raw @issue_data %>;
     const embeddedFonts = <%= raw @fonts.to_json %>;
+    const pluginSettings = <%= raw @plugin_settings.to_json %>;
+    const toggle_editing = <%= User.current.allowed_to?(:edit_print_templates, @project, global: true) %>;
   </script>
+  <%= javascript_include_tag 'pdfme-viewer', plugin: :redmine_print_templates %>
 </body>
 </html>

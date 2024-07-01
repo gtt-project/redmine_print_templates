@@ -1,17 +1,14 @@
 class PrintTemplatesController < ApplicationController
-  layout ->{ @project ? 'base' : 'admin' }
+  layout -> { @project ? 'base' : 'admin' }
 
   self.main_menu = false
 
   before_action :set_trackers, only: [:new, :create, :edit, :update]
-  before_action :find_print_template, only: [:edit, :update, :destroy]
+  before_action :find_print_template, only: [:edit, :update, :destroy, :show]
   before_action :require_admin, except: [:show, :fields_for_tracker]
 
-  # TODO: make this work with Rails.ajax
-  # before_action :authorize_view_print_templates, only: [:show, :fields_for_tracker]
-
   def index
-    @print_templates = PrintTemplate.includes(:tracker).all
+    @print_templates = PrintTemplate.includes(:tracker).all.order(name: :asc)
   end
 
   def new
@@ -28,7 +25,6 @@ class PrintTemplatesController < ApplicationController
   end
 
   def edit
-    # @print_template is set by before_action
   end
 
   def update
@@ -48,71 +44,116 @@ class PrintTemplatesController < ApplicationController
   end
 
   def show
-    @print_template = PrintTemplate.find(params[:id])
+    # Define the keys that need to be parsed as JSON
+    json_keys = ['schemas']
+
+    # Parse specified JSON strings to nested JSON
+    parsed_json = @print_template.attributes.each_with_object({}) do |(key, value), hash|
+      hash[key] = if json_keys.include?(key) && value.is_a?(String)
+                    begin
+                      JSON.parse(value)
+                    rescue JSON::ParserError
+                      value
+                    end
+                  else
+                    value
+                  end
+    end
+
+    fields_data = generate_fields_data(@print_template.tracker)
+
+    # Merge fields data into parsed_json
+    merged_json = parsed_json.merge(fields_data)
+
     respond_to do |format|
-      format.json { render json: @print_template }
-      format.js
+      format.json { render json: merged_json }
     end
   end
 
   def fields_for_tracker
-    @tracker = Tracker.find(params[:tracker_id])
-
-    # Define core fields
-    @core_fields = {
-      'standard#author.name' => ['text', 'field_author'],
-      'standard#status.name' => ['text', 'field_status'],
-      'standard#priority.name' => ['text', 'field_priority'],
-      'standard#assigned_to.name' => ['text', 'field_assigned_to'],
-      'standard#category.name' => ['text', 'field_category'],
-      'standard#fixed_version.name' => ['text', 'field_fixed_version'],
-      'standard#subject' => ['text', 'field_subject'],
-      'standard#description' => ['text', 'field_description'],
-      'standard#start_date' => ['date', 'field_start_date'],
-      'standard#due_date' => ['date', 'field_due_date'],
-      'standard#done_ratio' => ['text', 'field_done_ratio'],
-      'standard#estimated_hours' => ['text', 'field_estimated_hours'],
-      'standard#total_estimated_hours' => ['text', 'field_total_estimated_hours'],
-      'standard#spent_hours' => ['text', 'label_spent_time'],
-      'standard#total_spent_hours' => ['text', 'label_total_spent_time'],
-      'standard#created_on' => ['date', 'field_created_on'],
-      'standard#updated_on' => ['date', 'field_updated_on'],
-      'standard#closed_on' => ['date', 'field_closed_on'],
-    }.map { |field, attributes| create_field_hash(field, *attributes) }
-
-    # Define custom fields with their names directly
-    @custom_fields = @tracker.custom_fields.map do |cf|
-      field_identifier = "custom#issue_custom_field_values_#{cf.id}"
-      field_format = cf.field_format
-      field_name = cf.name
-
-      create_field_hash(field_identifier, field_format, field_name)
-    end
-
-    # Define special fields with localization keys
-    @special_fields = {
-      'special#issue_map' => ['image', 'field_issue_map'],
-      'special#issue_url' => ['qrcode', 'field_issue_url']
-    }.map { |field, attributes| create_field_hash(field, *attributes) }
-
-    # Sorting
-    @core_fields.sort_by! { |field| field[:name].downcase }
-    @custom_fields.sort_by! { |field| field[:name].downcase }
-    @special_fields.sort_by! { |field| field[:name].downcase }
-
-    respond_to do |format|
-      format.js
-    end
+    tracker = Tracker.find(params[:tracker_id])
+    fields_data = generate_fields_data(tracker)
+    render json: fields_data
   end
 
   private
+
+  def generate_fields_data(tracker)
+    # Define the fields that are available for the print template
+    core_fields = {
+      'author.name' => ['string', l(:field_author)],
+      'status.name' => ['string', l(:field_status)],
+      'priority.name' => ['string', l(:field_priority)],
+      'assigned_to.name' => ['string', l(:field_assigned_to)],
+      'category.name' => ['string', l(:field_category)],
+      'fixed_version.name' => ['string', l(:field_fixed_version)],
+      'subject' => ['string', l(:field_subject)],
+      'description' => ['text', l(:field_description)],
+      'start_date' => ['date', l(:field_start_date)],
+      'due_date' => ['date', l(:field_due_date)],
+      'done_ratio' => ['float', l(:field_done_ratio)],
+      'estimated_hours' => ['float', l(:field_estimated_hours)],
+      'total_estimated_hours' => ['float', l(:field_total_estimated_hours)],
+      'spent_hours' => ['float', l(:label_spent_time)],
+      'total_spent_hours' => ['float', l(:label_total_spent_time)],
+      'created_on' => ['date', l(:field_created_on)],
+      'updated_on' => ['date', l(:field_updated_on)],
+      'closed_on' => ['date', l(:field_closed_on)],
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
+
+    # Custom fields
+    custom_fields = tracker.custom_fields.map do |cf|
+      field_key = "cf_#{cf.id}"
+      field_format = cf.field_format
+      field_label = cf.name
+
+      create_field_hash(field_key, field_format, field_label)
+    end
+
+    # Special fields
+    special_fields = {
+      'issue_map' => ['map', l(:field_issue_map)],
+      'issue_url' => ['link', l(:field_issue_url)],
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
+
+    # Field formats
+    format_list = {
+      'bool' => ['boolean', 'Boolean'],
+      'date' => ['date', 'Date'],
+      # 'attachment' => ['file', 'File'],
+      'float' => ['float', 'Float'],
+      'int' => ['integer', 'Integer'],
+      # 'enumeration' => ['enumeration', 'Key/value list'],
+      # 'link' => ['link', 'Link'],
+      # 'list' => ['list', 'List'],
+      # 'text' => ['text', 'Long text'],
+      'string' => ['string', 'Text'],
+      # 'user' => ['user', 'User'],
+      # 'version' => ['version', 'Version'],
+    }.map { |field, attributes| create_field_hash(field, *attributes) }
+
+    # Return the fields data
+    {
+      'fieldKeyOptions': [{
+        'label': l(:label_core_fields),
+        'options': core_fields.sort_by! { |field| field[:value].downcase }
+      }, {
+        'label': l(:label_custom_fields),
+        'options': custom_fields.sort_by! { |field| field[:value].downcase }
+      }, {
+        'label': l(:label_special_fields),
+        'options': special_fields.sort_by! { |field| field[:value].downcase }
+      }],
+      'fieldFormatOptions': format_list
+    }
+  end
 
   def create_field_hash(field, format, name_or_key)
     name = I18n.exists?(name_or_key) ? I18n.t(name_or_key) : name_or_key
 
     {
-      name: name,
-      identifier: field,
+      label: name,
+      value: field,
       format: format
     }
   end
@@ -126,7 +167,7 @@ class PrintTemplatesController < ApplicationController
   end
 
   def print_template_params
-    params.require(:print_template).permit(:name, :schemas, :inputs, :basepdf, :tracker_id)
+    params.require(:print_template).permit(:name, :schemas, :basepdf, :tracker_id, :context)
   end
 
   def require_admin
