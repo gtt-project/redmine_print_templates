@@ -46,14 +46,21 @@ const createExtendedTextSchema = (
     }
 
     return {
-      readOnly: {
-        title: 'Read Only',
-        type: 'boolean',
-        widget: 'switch',
-        span: 8,
-      },
-      divider1: {
-        widget: 'divider',
+      field_permissions: {
+        title: 'Field Permissions',
+        widget: 'radio',
+        props: {
+          options: [
+            { label: 'Editable', value: 'editable' },
+            { label: 'Prefilled (Read-Only)', value: 'prefilled' },
+            { label: 'Locked (Read-Only)', value: 'readonly' },
+          ],
+          optionType: 'button',
+          defaultValue: 'editable',
+          onChange: (evt: any, cmp: any) => {
+            console.log(evt);
+          }
+        },
         span: 24,
       },
       field_key: {
