@@ -1,66 +1,77 @@
 <div class="box tabular settings">
-<h3><%= l(:general_print_templates_settings) %></h3>
+  <h3><%= l(:general_print_templates_settings) %></h3>
 
-<p>
-  <%= content_tag(:label, l(:print_templates_settings_general_placeholder_empty)) %>
-  <%= text_field_tag('settings[default_placeholder_empty]',
-      @settings['default_placeholder_empty'],
-      :size => 50) %>
-  <br><%= content_tag(:small, l(:print_templates_settings_general_placeholder_note)) %>
-</p>
-
+  <p>
+    <%= content_tag(:label, l(:print_templates_settings_general_placeholder_empty)) %>
+    <%= text_field_tag('settings[default_placeholder_empty]',
+        @settings['default_placeholder_empty'],
+        :size => 50) %>
+    <br><%= content_tag(:small, l(:print_templates_settings_general_placeholder_note)) %>
+  </p>
 </div>
 
 <div class="box tabular settings">
-<h3><%= l(:pdf_properties_print_templates_settings) %></h3>
+  <h3><%= l(:pdf_properties_print_templates_settings) %></h3>
 
-<p>
-  <%= content_tag(:label, l(:print_templates_settings_general_pdf_author)) %>
-  <%= text_field_tag('settings[default_pdf_author]',
-      @settings['default_pdf_author'],
-      :size => 50) %>
-</p>
+  <p>
+    <%= content_tag(:label, l(:print_templates_settings_general_pdf_author)) %>
+    <%= text_field_tag('settings[default_pdf_author]',
+        @settings['default_pdf_author'],
+        :size => 50) %>
+  </p>
 
-<p>
-  <%= content_tag(:label, l(:print_templates_settings_general_pdf_producer)) %>
-  <%= text_field_tag('settings[default_pdf_producer]',
-      @settings['default_pdf_producer'],
-      :size => 50) %>
-</p>
+  <p>
+    <%= content_tag(:label, l(:print_templates_settings_general_pdf_producer)) %>
+    <%= text_field_tag('settings[default_pdf_producer]',
+        @settings['default_pdf_producer'],
+        :size => 50) %>
+  </p>
 
-<p>
-  <%= content_tag(:label, l(:print_templates_settings_general_pdf_creator)) %>
-  <%= text_field_tag('settings[default_pdf_creator]',
-      @settings['default_pdf_creator'],
-      :size => 50, :readonly => true) %>
-</p>
-
+  <p>
+    <%= content_tag(:label, l(:print_templates_settings_general_pdf_creator)) %>
+    <%= text_field_tag('settings[default_pdf_creator]',
+        @settings['default_pdf_creator'],
+        :size => 50, :readonly => true) %>
+  </p>
 </div>
 
+<% if RedminePrintTemplates.map_layers.present? %>
 <div class="box tabular settings">
-<h3><%= l(:print_templates_font_settings) %></h3>
+  <h3><%= l(:print_templates_map_settings) %></h3>
 
-<p>
-  <label for="font_name"><%= l(:label_print_template_font_name) %></label>
-  <input type="text" id="font_name" size="50">
-</p>
-<p>
-  <label for="font_file"><%= l(:label_print_template_font_file) %></label>
-  <input type="file" id="font_file" accept=".ttf">
-</p>
+  <p>
+    <%= content_tag(:label, l(:print_templates_map_settings_basemap)) %>
+    <% map_layers = RedminePrintTemplates.map_layers %>
+    <%= select_tag('settings[default_map_provider]',
+        options_for_select(map_layers.map { |layer| [layer[:name], layer[:id]] }, @settings['default_map_provider']),
+        :include_blank => true) %>
+  </p>
+</div>
+<% end %>
 
-<p>
-  <% fonts = RedminePrintTemplates.fonts %>
-  <ul>
-  <% fonts.each do |font| %>
-    <li id="font-<%= font[:id] %>">
-      <%= font[:name] %> [<%= font[:size_mb] %> MB] |
-      <%= link_to 'Delete', '#', onclick: "deleteFont(#{font[:id]})", remote: true %>
-    </li>
-  <% end %>
-  </ul>
-</p>
+<div class="box tabular settings">
+  <h3><%= l(:print_templates_font_settings) %></h3>
 
+  <p>
+    <label for="font_name"><%= l(:label_print_template_font_name) %></label>
+    <input type="text" id="font_name" size="50">
+  </p>
+  <p>
+    <label for="font_file"><%= l(:label_print_template_font_file) %></label>
+    <input type="file" id="font_file" accept=".ttf">
+  </p>
+
+  <p>
+    <% fonts = RedminePrintTemplates.fonts %>
+    <ul>
+    <% fonts.each do |font| %>
+      <li id="font-<%= font[:id] %>">
+        <%= font[:name] %> [<%= font[:size_mb] %> MB] |
+        <%= link_to 'Delete', '#', onclick: "deleteFont(#{font[:id]})", remote: true %>
+      </li>
+    <% end %>
+    </ul>
+  </p>
 </div>
 
 <script>

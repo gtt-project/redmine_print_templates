@@ -17,6 +17,7 @@ Redmine::Plugin.register :redmine_print_templates do
       'default_pdf_author' => ENV['PDF_AUTHOR'] || 'Redmine System',
       'default_pdf_creator' => ENV['PDF_CREATOR'] || 'Redmine Print Plugin, powered by PDFme',
       'default_pdf_producer' => ENV['PDF_PRODUCER'] || 'Redmine Print Plugin',
+      'default_pdf_basemap' => ''
     },
     partial: 'print_templates/settings'
   )

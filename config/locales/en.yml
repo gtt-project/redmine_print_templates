@@ -44,6 +44,9 @@ en:
   print_templates_settings_general_pdf_creator: "Creator"
   print_templates_settings_general_pdf_producer: "Producer"
 
+  print_templates_map_settings: "Map Settings"
+  print_templates_map_settings_basemap: "Default base map"
+
   reload_page_for_designer: "Loading PDFme Designer..."
 
   # javascript:

@@ -18,4 +18,11 @@ module RedminePrintTemplates
     end
   end
 
+  def self.map_layers
+    return [] unless Redmine::Plugin.installed?(:redmine_gtt)
+
+    GttMapLayer.where(baselayer: true, global: true).sorted.map do |layer|
+      { id: layer.id, name: layer.name }
+    end
+  end
 end
