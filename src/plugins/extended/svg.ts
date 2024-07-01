@@ -2,7 +2,7 @@ import type { Plugin } from '@pdfme/common';
 import { svg as component } from '@pdfme/schemas';
 import { createPDFRender, createUIRender, createSchemaFunction, ExtendedSchema } from './schemaUtils';
 
-const createExtendedSvgSchema = (
+const extendedSvg = (
   fieldKeyOptions: { label: string; options: { label: string; value: string }[] }[],
   fieldFormatOptions: { label: string; value: string }[]
 ) => {
@@ -28,4 +28,4 @@ const createExtendedSvgSchema = (
   return extendedSchema;
 };
 
-export { createExtendedSvgSchema };
+export { extendedSvg };

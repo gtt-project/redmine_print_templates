@@ -2,7 +2,7 @@ import type { Plugin } from '@pdfme/common';
 import { image as component } from '@pdfme/schemas';
 import { createPDFRender, createUIRender, createSchemaFunction, ExtendedSchema } from './schemaUtils';
 
-const createExtendedImageSchema = (
+const extendedImage = (
   fieldKeyOptions: { label: string; options: { label: string; value: string }[] }[],
   fieldFormatOptions: { label: string; value: string }[]
 ) => {
@@ -28,4 +28,4 @@ const createExtendedImageSchema = (
   return extendedSchema;
 };
 
-export { createExtendedImageSchema };
+export { extendedImage };

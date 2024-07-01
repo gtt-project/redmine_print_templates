@@ -11,6 +11,12 @@ const tsLoaders = {
   exclude: /node_modules/
 };
 
+// Loaders for processing CSS files
+const cssLoaders = {
+  test: /\.css$/,
+  use: ['style-loader', 'css-loader'],
+};
+
 export default {
   mode: 'production',
   entry: {
@@ -20,6 +26,7 @@ export default {
   module: {
     rules: [
       tsLoaders,
+      cssLoaders,
     ]
   },
   devtool: false, // Disable source maps

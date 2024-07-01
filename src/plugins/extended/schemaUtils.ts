@@ -5,7 +5,7 @@ interface ExtendedSchema extends Schema {
   field_format?: string;
   field_options?: string;
   readOnly?: boolean;
-}
+};
 
 const createPDFRender = (component: any) => {
   return async (arg: PDFRenderProps<ExtendedSchema>) => {

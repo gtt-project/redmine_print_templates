@@ -1,13 +1,8 @@
 import {
-  text, readOnlyText,
-  image, readOnlyImage,
-  svg, readOnlySvg,
   line, rectangle, ellipse,
   tableBeta,
   barcodes,
 } from '@pdfme/schemas';
-import { v4 as uuidv4 } from 'uuid';
-import { mapIconDataUrl } from './mapIconDataUrl';
 import plugins from './plugins';
 
 import type { PluginOptions } from './types';
@@ -20,12 +15,10 @@ import type { PluginOptions } from './types';
 export const getPlugins = (options: PluginOptions) => {
   return {
     Text: plugins.extendedText(options),
-    // ReadOnlyText: readOnlyText,
-    Table: tableBeta,
     Image: plugins.extendedImage(options),
-    // ReadOnlyImage: readOnlyImage,
     SVG: plugins.extendedSvg(options),
-    // ReadOnlySvg: readOnlySvg,
+    Map: plugins.mapImage(options),
+    Table: tableBeta,
     Line: line,
     Rectangle: rectangle,
     Ellipse: ellipse,

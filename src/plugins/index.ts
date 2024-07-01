@@ -1,15 +1,17 @@
 import { signature } from './signature';
-import { createExtendedTextSchema } from './extended/text';
-import { createExtendedImageSchema } from './extended/image';
-import { createExtendedSvgSchema } from './extended/svg';
+import { extendedText } from './extended/text';
+import { extendedImage } from './extended/image';
+import { extendedSvg } from './extended/svg';
+import { mapImage } from './map';
 
 import type { PluginOptions } from '../types';
 
 const plugins = {
+  extendedText: (options: PluginOptions) => extendedText(options.fieldKeyOptions, options.fieldFormatOptions),
+  extendedImage: (options: PluginOptions) => extendedImage(options.fieldKeyOptions, options.fieldFormatOptions),
+  extendedSvg: (options: PluginOptions) => extendedSvg(options.fieldKeyOptions, options.fieldFormatOptions),
+  mapImage: (options: PluginOptions) => mapImage(),
   signature,
-  extendedText: (options: PluginOptions) => createExtendedTextSchema(options.fieldKeyOptions, options.fieldFormatOptions),
-  extendedImage: (options: PluginOptions) => createExtendedImageSchema(options.fieldKeyOptions, options.fieldFormatOptions),
-  extendedSvg: (options: PluginOptions) => createExtendedSvgSchema(options.fieldKeyOptions, options.fieldFormatOptions),
 };
 
 export default plugins;

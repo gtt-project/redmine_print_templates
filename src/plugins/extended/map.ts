@@ -1,14 +1,14 @@
-import type { Plugin } from '@pdfme/common';
-import { text as component } from '@pdfme/schemas';
+import { Plugin } from '@pdfme/common';
+import { image as component } from '@pdfme/schemas';
 import { createPDFRender, createUIRender, createSchemaFunction, ExtendedSchema } from './schemaUtils';
 
-const extendedText = (
+const extendedMap = (
   fieldKeyOptions: { label: string; options: { label: string; value: string }[] }[],
   fieldFormatOptions: { label: string; value: string }[]
 ) => {
   const defaultSchema: ExtendedSchema = {
     ...component.propPanel.defaultSchema,
-    type: 'extendedText',
+    type: 'extendedMap',
   };
 
   const schemaFunction = createSchemaFunction(component.propPanel.schema, fieldKeyOptions, fieldFormatOptions);
@@ -28,4 +28,4 @@ const extendedText = (
   return extendedSchema;
 };
 
-export { extendedText };
+export { extendedMap };
