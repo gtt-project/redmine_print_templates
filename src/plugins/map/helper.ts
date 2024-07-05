@@ -1,19 +1,16 @@
-import { PropPanelSchema, ZOOM } from '@pdfme/common';
-import {
-  DEFAULT_MAX_ZOOM_TO_EXTENT, DEFAULT_MAP_STYLE_OPACITY, DEFAULT_GEOJSON,
-  DEFAULT_MAX_EXTENT, DEFAULT_MIN_ZOOM, DEFAULT_MAX_ZOOM,
-} from './constants';
-import type { MapState } from './types';
-
-import Map from 'ol/Map';
-import View from 'ol/View';
-import { OSM, Vector as VectorSource } from 'ol/source';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { Map, View }  from 'ol';
+import { Vector as VectorSource, OSM } from 'ol/source';
+import { Vector as VectorLayer, Layer, Tile as TileLayer } from 'ol/layer';
 import { Attribution, ZoomToExtent, defaults as defaultControls } from 'ol/control';
-import { Style, Circle as CircleStyle , Fill, Stroke } from 'ol/style';
 import { DragRotateAndZoom, defaults as defaultInteractions } from 'ol/interaction';
-import { transformExtent } from 'ol/proj';
 import { GeoJSON } from 'ol/format';
+import { applyStyle, applyBackground } from 'ol-mapbox-style';
+
+import { PropPanelSchema, ZOOM } from '@pdfme/common';
+
+import { MAX_ZOOM_TO_EXTENT, VECTOR_STYLE_OPACITY, DEFAULT_GEOJSON, DEFAULT_VECTOR_STYLE, DEFAULT_MAP_VIEW, DEFAULT_WIDTH, DEFAULT_HEIGHT } from './constants';
+import { layerConstructors, sourceConstructors, formatConstructors } from './types';
+import type { MapState, MapLayer } from './types';
 
 import 'ol/ol.css';
 
@@ -50,85 +47,86 @@ const loadMapState = (key: string): MapState | null => {
  */
 export const setupMap = async (schema: PropPanelSchema, rootElement: HTMLDivElement, mode: string, key: string): Promise<Map> => {
 
-  if (!schema.width || !schema.height || !schema.mapView || !schema.mapStyle) {
-    throw new Error("Invalid schema properties");
-  }
+  const width = schema.width || DEFAULT_WIDTH;
+  const height = schema.height || DEFAULT_HEIGHT;
 
   const mapDiv = document.createElement('div') as HTMLDivElement;
-  mapDiv.style.width = `${schema.width! as number * ZOOM}px`;
-  mapDiv.style.height = `${schema.height! as number * ZOOM}px`;
+  mapDiv.style.width = `${width! as number * ZOOM}px`;
+  mapDiv.style.height = `${height! as number * ZOOM}px`;
   rootElement.appendChild(mapDiv);
 
-  // TODO: Add support for multiple layers provided through schema.mapView
-  const raster = new TileLayer({ source: new OSM() });
+  let layers: Layer<any>[] = [];
 
-  // Todo: Add support for multiple styles provided through schema.mapStyle
-  const pointStyle = new Style({
-    image: new CircleStyle({
-      radius: 10,
-      fill: new Fill(schema.mapStyle.stroke),
-      stroke: new Stroke(schema.mapStyle.fill)
-    })
-  });
+  if (schema.mapLayer) {
+    const layer = createLayer(JSON.parse(schema.mapLayer) as MapLayer);
+    if (layer) {
+      layers.push(layer);
+    }
+  } else {
+    // Add OSM as default basemap
+    layers.push(new TileLayer({ source: new OSM() }));
+  }
 
-  // TODO: Add support for multiple features provided through schema.geojson
-  const geojsonFeature = {
-    ...DEFAULT_GEOJSON,
-    features: DEFAULT_GEOJSON.features.map(feature => {
-      if (feature.geometry.type === "Point") {
-        return {
-          ...feature,
+  // Determine coordinates, prioritizing schema.lat and schema.lon
+  const pointFeature = schema.lat !== undefined && schema.lon !== undefined
+  ? [schema.lon, schema.lat]
+  : undefined;
+
+  // Create features based on the determined coordinates or fallback to schema.geojson or DEFAULT_GEOJSON
+  const features = pointFeature
+    ? {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
           geometry: {
-            ...feature.geometry,
-            coordinates: [schema.pointLocation.lon, schema.pointLocation.lat]
-          }
-        };
+            type: 'Point',
+            coordinates: pointFeature
+          },
+          properties: {}
+        }]
       }
-      return feature;
-    })
-  };
+    : schema.geojson?.features
+      ? schema.geojson
+      : DEFAULT_GEOJSON?.features
+        ? DEFAULT_GEOJSON
+        : null;
 
   const vectorSource = new VectorSource({
-    features: new GeoJSON().readFeatures(geojsonFeature, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
-    })
+    features: features
+      ? new GeoJSON().readFeatures(features, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        })
+      : []
   });
 
   const vector = new VectorLayer({
     source: vectorSource as VectorSource,
-    style: pointStyle,
-    opacity: DEFAULT_MAP_STYLE_OPACITY ? DEFAULT_MAP_STYLE_OPACITY : 0.7,
+    style: DEFAULT_VECTOR_STYLE,
+    opacity: VECTOR_STYLE_OPACITY ? VECTOR_STYLE_OPACITY : 0.7,
   });
+  layers.push(vector);
+
+  const defaultExtent = vectorSource.getFeatures().length > 0 ? vectorSource.getExtent() : DEFAULT_MAP_VIEW.extent;
+
+  const zoomToExtentControl = new ZoomToExtent({
+    extent: defaultExtent,
+  });
+
+  const dragRotateAndZoomControl = new DragRotateAndZoom();
 
   const attributionControl = new Attribution({
     collapsible: false,
   });
 
-  const zoomToExtentControl = new ZoomToExtent({
-    extent: vectorSource.getExtent(),
-    label: 'E',
-    tipLabel: 'Zoom to extent',
-  });
-
-  const dragRotateAndZoomControl = new DragRotateAndZoom();
-
   return new Promise((resolve, reject) => {
     try {
       const map = new Map({
-        layers: [raster, vector],
+        layers: layers,
         target: mapDiv,
-        view: new View({
-          center: [
-            schema.mapView.center.lon as number,
-            schema.mapView.center.lat as number],
-          zoom: schema.mapView.zoom as number,
-          minZoom: DEFAULT_MIN_ZOOM,
-          maxZoom: DEFAULT_MAX_ZOOM,
-          extent: transformExtent(DEFAULT_MAX_EXTENT, 'EPSG:4326', 'EPSG:3857'),
-        }),
+        view: new View(schema.mapLayer || DEFAULT_MAP_VIEW),
         controls: mode === 'viewer' ? [attributionControl] : defaultControls().extend([attributionControl,zoomToExtentControl]),
-        interactions: mode === 'viewer' ? defaultInteractions().extend([dragRotateAndZoomControl]) : defaultInteractions().extend([dragRotateAndZoomControl]),
+        interactions: mode === 'viewer' ? [] : defaultInteractions().extend([dragRotateAndZoomControl]),
       });
 
       // Restore saved state if available
@@ -136,12 +134,11 @@ export const setupMap = async (schema: PropPanelSchema, rootElement: HTMLDivElem
       if (savedState) {
         map.getView().setCenter(savedState.center);
         map.getView().setZoom(savedState.zoom);
-        map.getView().setRotation(savedState.rotation);
+        // map.getView().setRotation(savedState.rotation);
       } else {
-        map.getView().fit(vectorSource.getExtent(), {
-          maxZoom: DEFAULT_MAX_ZOOM_TO_EXTENT ? DEFAULT_MAX_ZOOM_TO_EXTENT : 7
+        map.getView().fit(defaultExtent, {
+          maxZoom: MAX_ZOOM_TO_EXTENT ? MAX_ZOOM_TO_EXTENT : 7
         });
-        map.getView().setRotation(schema.mapView.rotation as number ? schema.mapView.rotation as number : 0);
       }
 
       resolve(map); // Resolve the promise with the map instance
@@ -227,3 +224,55 @@ const generateDataUrl = (map: Map, key: string) => {
     resolve(data);
   });
 };
+
+// Function to find the first selected layer
+export function getFirstSelectedLayer(layers: MapLayer[]): MapLayer | undefined {
+  return layers.find(layer => layer.selected);
+}
+
+/**
+ * Layer constructor
+ * @param basemapConfig
+ * @returns
+ */
+function createLayer(basemapConfig: MapLayer): Layer<any> | undefined {
+  const { layer_type, source_type, format_type, layer_options, source_options, format_options } = basemapConfig;
+
+  // Assuming that layer_type and source_type are required
+  if (!layer_type || !source_type) {
+    return undefined;
+  }
+
+  const LayerConstructor = layerConstructors[layer_type];
+  const SourceConstructor = sourceConstructors[source_type];
+  const FormatConstructor = format_type ? formatConstructors[format_type] : undefined;
+
+  if (!SourceConstructor || !LayerConstructor) {
+    return undefined;
+  }
+
+  let format;
+
+  if (FormatConstructor) {
+    format = new FormatConstructor({
+      ...format_options || {},
+    });
+  }
+
+  const source = new SourceConstructor({
+    ...(format ? { format } : {}),
+    ...source_options || {},
+  });
+
+  const layer = new LayerConstructor({
+    source,
+    ...layer_options || {},
+  });
+
+  if (layer_options && layer_options.styleUrl) {
+    applyStyle(layer as any, layer_options.styleUrl);
+    applyBackground(layer as any, layer_options.styleUrl);
+  }
+
+  return layer;
+}

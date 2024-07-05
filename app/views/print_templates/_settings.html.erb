@@ -46,6 +46,11 @@
         options_for_select(map_layers.map { |layer| [layer[:name], layer[:id]] }, @settings['default_map_provider']),
         :include_blank => true) %>
   </p>
+
+  <p>
+    <%= content_tag(:label, l(:print_templates_map_settings_basemap_option_override)) %>
+    <%= check_box_tag 'settings[default_map_provider_allow_override]', false, @settings[:default_map_provider_allow_override] %>
+  </p>
 </div>
 <% end %>
 

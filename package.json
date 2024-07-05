@@ -30,14 +30,17 @@
     "@types/fontkit": "^2.0.7",
     "@types/uuid": "^10.0.0",
     "ol": "9.1.0",
+    "ol-mapbox-style": "^12.3.4",
     "signature_pad": "^5.0.2",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.5.2",
+    "typescript": "^5.5.3",
     "uuid": "^10.0.0",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.14",
+    "@types/react": "^18.3.3",
     "css-loader": "^7.1.2",
     "style-loader": "^4.0.0"
   }

@@ -46,6 +46,7 @@ en:
 
   print_templates_map_settings: "Map Settings"
   print_templates_map_settings_basemap: "Default base map"
+  print_templates_map_settings_basemap_option_override: "Allow base map override"
 
   reload_page_for_designer: "Loading PDFme Designer..."
 

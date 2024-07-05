@@ -50,15 +50,11 @@ const createSchemaFunction = (
         widget: 'switch',
         span: 8,
       },
-      divider1: {
-        widget: 'divider',
-        span: 24,
-      },
       field_key: {
         title: 'Field Key',
         type: 'string',
         widget: 'select',
-        span: 16,
+        span: 24,
         props: {
           options: fieldKeyOptions,
           allowClear: true,
@@ -79,10 +75,6 @@ const createSchemaFunction = (
         type: 'string',
         widget: 'input',
         span: 16,
-      },
-      divider2: {
-        widget: 'divider',
-        span: 24,
       },
       ...existingSchema,
     };

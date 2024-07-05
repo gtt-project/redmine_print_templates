@@ -1,6 +1,7 @@
 import type { PDFRenderProps, UIRenderProps, PropPanelWidgetProps, PropPanelSchema } from '@pdfme/common';
+import { Point } from 'geojson';
 
-import { DEFAULT_GEOJSON } from './constants';
+import { DEFAULT_MAP_LAYERS, DEFAULT_GEOJSON } from './constants';
 import { setupMap, updateMap } from "./helper";
 
 import type { MapSchema } from './types';
@@ -56,38 +57,48 @@ const createSchemaFunction = (
       existingSchema = originalSchema;
     }
 
+    const schemaCoordinates = (activeSchema.geojson?.features?.[0]?.geometry as Point)?.coordinates;
+    const defaultCoordinates = (DEFAULT_GEOJSON.features?.[0]?.geometry as Point)?.coordinates;
+
+    const [defaultLon, defaultLat] = schemaCoordinates
+      ? [schemaCoordinates[0], schemaCoordinates[1]]
+      : defaultCoordinates
+        ? [defaultCoordinates[0], defaultCoordinates[1]]
+        : [undefined, undefined];
+
     return {
-      readOnly: {
-        title: 'Read Only',
-        type: 'boolean',
-        widget: 'switch',
-        span: 8,
+      mapLayer: {
+        title: 'Basemap layer',
+        type: 'string',
+        widget: 'select',
+        span: 24,
+        props: {
+          options: DEFAULT_MAP_LAYERS.map(layer => ({
+            label: layer.name,
+            value: JSON.stringify(layer)
+          })),
+          defaultValue: activeSchema.mapLayer?.name ?? '',
+        },
       },
-      pointLocation: {
-        type: 'object',
-        title: 'Point Location (WGS84)',
-        properties: {
-          lon: {
-            title: 'Longitude',
-            type: 'number',
-            default: DEFAULT_GEOJSON.features[0].geometry.coordinates[0],
-            props: {
-              placeholder: 'Enter longitude'
-            },
-            min: -180,
-            max: 180,
-          },
-          lat: {
-            title: 'Latitude',
-            type: 'number',
-            default: DEFAULT_GEOJSON.features[0].geometry.coordinates[1],
-            props: {
-              placeholder: 'Enter latitude'
-            },
-            min: -90,
-            max: 90,
-          }
-        }
+      lon: {
+        title: 'Longitude (WGS84)',
+        type: 'number',
+        defaultValue: defaultLon,
+        props: {
+          placeholder: 'Enter longitude'
+        },
+        min: -180,
+        max: 180,
+      },
+      lat: {
+        title: 'Latitude (WGS84)',
+        type: 'number',
+        defaultValue: defaultLat,
+        props: {
+          placeholder: 'Enter latitude'
+        },
+        min: -90,
+        max: 90,
       },
       ...existingSchema,
     };
@@ -104,7 +115,7 @@ const ui = async (props: UIRenderProps<MapSchema>) => {
       try {
         const dataUrl = await updateMap(map, key);
         // console.log('dataUrl', dataUrl.length);
-        schema.data = dataUrl;
+        schema.content = dataUrl;
       } catch (error) {
         console.error("Error in moveend event: ", error);
       }

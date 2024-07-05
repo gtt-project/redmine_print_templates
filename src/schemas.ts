@@ -17,13 +17,14 @@ export const getPlugins = (options: PluginOptions) => {
     Text: plugins.extendedText(options),
     Image: plugins.extendedImage(options),
     SVG: plugins.extendedSvg(options),
-    Map: plugins.mapImage(options),
+    // Map: plugins.mapImage(options),
+    SimpleMap: plugins.simpleMap(options),
     Table: tableBeta,
     Line: line,
     Rectangle: rectangle,
     Ellipse: ellipse,
     QR: barcodes.qrcode,
     Code128: barcodes.code128,
-    // Signature: plugins.signature,
+    Sketch: plugins.signature,
   };
 };
