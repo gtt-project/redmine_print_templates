@@ -5,6 +5,7 @@ class PrintTemplatesController < ApplicationController
 
   before_action :set_trackers, only: [:new, :create, :edit, :update]
   before_action :find_print_template, only: [:edit, :update, :destroy, :show]
+  before_action :require_login, except: [:show, :fields_for_tracker]
   before_action :require_admin, except: [:show, :fields_for_tracker]
 
   def index
@@ -168,6 +169,12 @@ class PrintTemplatesController < ApplicationController
 
   def print_template_params
     params.require(:print_template).permit(:name, :schemas, :basepdf, :tracker_id, :context)
+  end
+
+  def require_login
+    unless User.current.logged?
+      redirect_to signin_path(back_url: request.original_url)
+    end
   end
 
   def require_admin
