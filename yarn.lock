@@ -266,19 +266,19 @@
   dependencies:
     pako "^1.0.10"
 
-"@pdfme/common@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-4.0.2.tgz#bc733496255ca38fc384722e8433dd1e70599e66"
-  integrity sha512-pfEjhVlbWOYJLL6NxetZM4RhWU1cB/mDF5wUnQCTmGCFPXJxC/nRYj0QDSgcBxQGt7hHo3H7pgRFGOsDtV457g==
+"@pdfme/common@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@pdfme/common/-/common-4.1.0.tgz#536f7ab46db64549fb2f0bee98acb7dafd9833dc"
+  integrity sha512-MaD0u+Zn5kw2LPiGiVDST23KdFXtzd75oBi/4ZzmrkBTnMjC2xHwEe36jFGO+xhX478CcPqVk0FidHA4Q+u3sA==
   dependencies:
     "@pdfme/pdf-lib" "^1.18.3"
     buffer "^6.0.3"
     zod "^3.20.2"
 
-"@pdfme/generator@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-4.0.2.tgz#fefb89cb3343cb4eae643a3afe034fe67d956ad7"
-  integrity sha512-bwyxVlFsFaieQuLPfPiU1By8pFjmmpxWzM3y6ZakJj4eVEqMDdvSEFSKGx2+Hr6J3MJ5Lp97Q8Lc2iyGHrRjtg==
+"@pdfme/generator@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@pdfme/generator/-/generator-4.1.0.tgz#06d25b321b381e1c42ba0005a8018a3c2c229f4d"
+  integrity sha512-4fe/9Xd55N6yNrJUf7XVfhCAxO3k8KO01r+1u3Cgiu+tdxD+ZGsEQegbtTHA+EsVk+6A5FK0coIpNKIjqPqMIQ==
   dependencies:
     "@pdfme/pdf-lib" "^1.18.3"
     atob "^2.1.2"
@@ -295,20 +295,20 @@
     node-html-better-parser "^1.4.0"
     pako "^1.0.11"
 
-"@pdfme/schemas@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@pdfme/schemas/-/schemas-4.0.2.tgz#f58a191fc9a4c51c31f56b0b6af59228a149871a"
-  integrity sha512-WH8yaHYj9uCMiP96FWZR20T0WWNkROX6Es6hTMG23Sh0tjZ/X7tcn+lOL+HnMSs9q+p1PPgH7gL2XrQboi2MJw==
+"@pdfme/schemas@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@pdfme/schemas/-/schemas-4.1.0.tgz#c00560dd050e1db5ca355f994aca698239ab57b8"
+  integrity sha512-o69Pm6VJH329FZ2tRGJXH1P7A1vNYlzQSW3UqNA4ZihJrDJeuBMJDEPW4IqODLb+UjHZWlQZbcnbQs1d3jWbcQ==
   dependencies:
     "@pdfme/pdf-lib" "^1.18.3"
     bwip-js "^4.1.1"
     fast-xml-parser "^4.3.2"
     fontkit "^2.0.2"
 
-"@pdfme/ui@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-4.0.2.tgz#fc2782b13c61f80c75bde65ac33cc7fecc1ef49a"
-  integrity sha512-Z5YF7DqhMGV0B/X8aJaZkgHZgAe39ZSuS+cdVXYr0DVpqsa6c9iyv6G5HA47ENgp3OJNVFAHYnF9bdDwUIXl1Q==
+"@pdfme/ui@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@pdfme/ui/-/ui-4.1.0.tgz#704d8bb7e21b2e4038257dc565e3d32f34375e0a"
+  integrity sha512-1X79Yvi+CTm8d9JQ7BXO0YRq2j4ra29ehyjWHAnYUOmVX+GEYCqBM4fYpJNBPZ5+zx7A3N/MhEgVCnUaWenKJQ==
   dependencies:
     "@ant-design/icons" "^5.2.6"
     "@dnd-kit/core" "^6.0.8"
