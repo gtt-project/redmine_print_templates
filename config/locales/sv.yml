@@ -1,0 +1,48 @@
+project_module_print_templates: Skriv ut mallar
+permission_view_print_templates: Visa utskriftsmallar
+permission_edit_print_templates: Ändra utskriftsmallar
+permission_admin_print_templates: Hantera utskriftsmallar
+label_print_template: Skriv ut mall
+label_print_templates_plural: Skriv ut mallar
+label_print_templates_new: Ny tryckmall
+label_print_template_name: Skriv ut mallens namn
+label_print_template_basepdf: BasPDF
+label_print_template_context: Sammanhang
+label_print_template_context_option_issue: Utgåva (singel)
+label_print_template_context_option_issues: Frågor (lista)
+label_print_template_context_option_project: Projekt
+general_print_templates_settings: Allmänna inställningar
+button_print_template_designer_open: Öppna Designer i helskärm
+button_print_template_add_field: Lägg till fält
+button_print_template_designer_close: Nära designer
+button_print_template_designer_template_download: Ladda ner mall
+button_print_template_designer_template_upload: Ladda upp mall
+link_print_template_basepdf_reset: Återställ till blank BasePDF
+button_print_template_view_pdf: Förhandsgranska PDF
+button_print_template_download_pdf: Ladda ner PDF
+label_select_print_template: 'Välj en mall från listan:'
+label_no_print_template_available: Inga utskriftsmallar finns tillgängliga för den
+  här utgåvans tracker-typ.
+label_print_template_administration: Hantera utskriftsmallar
+field_issue_map: Karta över problem
+field_issue_url: Utfärdad URL
+print_templates_font_settings: Anpassade teckensnitt
+label_print_template_font_file: Typsnitt-fil
+label_print_template_font_name: Teckensnittsnamn
+button_print_template_font_upload: Ladda upp teckensnitt
+print_templates_settings_general_placeholder_empty: Platshållartext för tomt fält
+print_templates_settings_general_placeholder_note: Ange text som ska visas i tomma
+  fält, eller lämna detta tomt för att hålla fälten tomma.
+label_core_fields: Centrala fält
+label_custom_fields: Anpassade fält
+label_special_fields: Särskilda områden
+pdf_properties_print_templates_settings: PDF Egenskaper
+print_templates_settings_general_pdf_author: Författare
+print_templates_settings_general_pdf_creator: Skapare
+print_templates_settings_general_pdf_producer: Producent
+reload_page_for_designer: Ladda om sidan för att starta PDFme Designer...
+confirm_delete_font: Är du säker på att du vill ta bort det här teckensnittet?
+error_uploading_font: Fel under uppladdning av teckensnitt.
+error_deleting_font: Fel vid borttagning av teckensnitt.
+error_reading_file: Fel vid läsning av fil.
+provide_font_name_and_file: Ange både ett namn på teckensnittet och en fil.
